@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Hello Market</string>
+    <string name="login">Login</string>
+    <string name="don_t_have_an_account">Don\'t have an account?</string>
+    <string name="register">Register</string>
+    <string name="you_have_an_account">you have an account?</string>
+    <string name="sign_in_to_your_account">Sign in to your account</string>
+    <string name="create_your_account">Create your account</string>
 </resources>
