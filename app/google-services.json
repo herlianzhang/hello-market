@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "903672148120",
+    "project_id": "hello-market-dpr",
+    "storage_bucket": "hello-market-dpr.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:903672148120:android:76d49712f1e1ea2b0320ed",
+        "android_client_info": {
+          "package_name": "com.dpr.hello_market"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "903672148120-7vd6575jiufhe0vcv9psis3in7ushrqh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dpr.hello_market",
+            "certificate_hash": "ec72fd216a0d3ba4592caf1e2bcf80d3d04ccd0a"
+          }
+        },
+        {
+          "client_id": "903672148120-13pmok20q7ggbvbekekb7kgnoobd4nb8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVKmn4hbT7V-clZ0ab2azWe6o69EZW4xY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "903672148120-13pmok20q7ggbvbekekb7kgnoobd4nb8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
