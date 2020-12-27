@@ -57,7 +57,7 @@ class LoginFragment : Fragment(), Injectable {
     private fun initObserver() {
         viewModel.loginSuccess.observe(viewLifecycleOwner, {
             Toast.makeText(context, "Login Success", Toast.LENGTH_SHORT).show()
-            findNavController().navigate(R.id.action_loginFragment_to_home_fragment)
+            findNavController().navigate(R.id.action_loginFragment_to_main_fragment)
         })
 
         viewModel.loginFail.observe(viewLifecycleOwner, { e ->

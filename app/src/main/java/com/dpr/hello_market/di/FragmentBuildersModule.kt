@@ -1,5 +1,6 @@
 package com.dpr.hello_market.di
 
+import com.dpr.hello_market.ui.account.AccountFragment
 import com.dpr.hello_market.ui.decision.DecisionFragment
 import com.dpr.hello_market.ui.login.LoginFragment
 import com.dpr.hello_market.ui.register.RegisterFragment
@@ -16,4 +17,7 @@ abstract class FragmentBuildersModule {
 
     @ContributesAndroidInjector
     abstract fun contributeRegisterFragment(): RegisterFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeAccountFragment(): AccountFragment
 }

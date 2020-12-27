@@ -2,6 +2,7 @@ package com.dpr.hello_market.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.dpr.hello_market.ui.account.AccountViewModel
 import com.dpr.hello_market.ui.decision.DecisionViewModel
 import com.dpr.hello_market.ui.login.LoginViewModel
 import com.dpr.hello_market.ui.register.RegisterViewModel
@@ -26,6 +27,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(RegisterViewModel::class)
     abstract fun bindRegisterViewModel(registerViewModel: RegisterViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(AccountViewModel::class)
+    abstract fun bindAccountViewModel(accountViewModel: AccountViewModel): ViewModel
 
     @Binds
     abstract fun bindViewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory

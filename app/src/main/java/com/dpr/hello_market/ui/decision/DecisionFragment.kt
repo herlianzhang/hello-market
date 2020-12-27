@@ -42,7 +42,7 @@ class DecisionFragment : Fragment(), Injectable {
         viewModel.isAuthenticated.observe(viewLifecycleOwner, { isAuthenticated ->
             findNavController().navigate(
                 if (isAuthenticated)
-                    R.id.action_decisionFragment_to_home_fragment
+                    R.id.action_decisionFragment_to_main_fragment
                 else
                     R.id.action_decisionFragment_to_loginFragment
             )

@@ -68,7 +68,7 @@ class RegisterFragment : Fragment(), Injectable {
     private fun initObserver() {
         viewModel.registerSuccess.observe(viewLifecycleOwner, {
             Toast.makeText(context, "Register Success", Toast.LENGTH_SHORT).show()
-            findNavController().navigate(R.id.action_registerFragment_to_home_fragment)
+            findNavController().navigate(R.id.action_registerFragment_to_main_fragment)
         })
 
         viewModel.registerFail.observe(viewLifecycleOwner, { e ->
