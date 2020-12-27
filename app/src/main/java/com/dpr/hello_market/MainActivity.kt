@@ -12,6 +12,7 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Any>
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.Theme_HelloMarket)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
     }
