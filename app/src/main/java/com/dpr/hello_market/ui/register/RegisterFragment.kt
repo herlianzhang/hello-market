@@ -55,7 +55,7 @@ class RegisterFragment : Fragment(), Injectable {
 
     private fun initListener() {
         binding.tvLogin.setOnClickListener {
-            findNavController().popBackStack()
+            findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
         }
 
         binding.buttonRegister.setOnClickListener {

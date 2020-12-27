@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.HelloMarket.BigTitle">
+        <item name="android:textSize">56sp</item>
+        <item name="android:textColor">@color/green_700</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+</resources>
