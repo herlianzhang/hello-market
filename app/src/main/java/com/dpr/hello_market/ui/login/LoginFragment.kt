@@ -42,18 +42,6 @@ class LoginFragment : Fragment(), Injectable {
         initObserver()
     }
 
-    private fun initObserver() {
-        viewModel.loginSuccess.observe(viewLifecycleOwner, {
-            Toast.makeText(context, "Login Success", Toast.LENGTH_SHORT).show()
-            findNavController().navigate(R.id.action_loginFragment_to_home_fragment)
-        })
-
-        viewModel.loginFail.observe(viewLifecycleOwner, { e ->
-            Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
-            Timber.e("SignIn failed cause: $e")
-        })
-    }
-
     private fun initListener() {
         binding.tvRegister.setOnClickListener {
             findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
@@ -64,5 +52,17 @@ class LoginFragment : Fragment(), Injectable {
             val password = binding.etPassword.text.toString()
             viewModel.signInWithEmailAndPassword(email, password)
         }
+    }
+
+    private fun initObserver() {
+        viewModel.loginSuccess.observe(viewLifecycleOwner, {
+            Toast.makeText(context, "Login Success", Toast.LENGTH_SHORT).show()
+            findNavController().navigate(R.id.action_loginFragment_to_home_fragment)
+        })
+
+        viewModel.loginFail.observe(viewLifecycleOwner, { e ->
+            Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
+            Timber.e("SignIn failed cause: $e")
+        })
     }
 }

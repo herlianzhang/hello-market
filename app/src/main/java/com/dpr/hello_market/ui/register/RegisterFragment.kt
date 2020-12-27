@@ -47,8 +47,10 @@ class RegisterFragment : Fragment(), Injectable {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = injectViewModel(viewModelFactory)
+        binding.viewModel = viewModel
 
         initListener()
+        initObserver()
     }
 
     private fun initListener() {
@@ -59,36 +61,19 @@ class RegisterFragment : Fragment(), Injectable {
         binding.buttonRegister.setOnClickListener {
             val email = binding.etEmail.text.toString()
             val password = binding.etPassword.text.toString()
-
-            if (!Helper.isValidEmail(email)) {
-                binding.etEmail.error = "Email not valid"
-                return@setOnClickListener
-            }
-            if (!Helper.isValidPassword(password)) {
-                binding.etPassword.error = "Password must be at least 4 character"
-                return@setOnClickListener
-            }
-
-            binding.etEmail.error = null
-            binding.etPassword.error = null
-
-            createUserWithEmailAndPassword(email, password)
+            viewModel.createUserWithEmailAndPassword(email, password)
         }
     }
 
-    private fun createUserWithEmailAndPassword(email: String, password: String) {
-        binding.pbLoading.visibility = View.VISIBLE
+    private fun initObserver() {
+        viewModel.registerSuccess.observe(viewLifecycleOwner, {
+            Toast.makeText(context, "Register Success", Toast.LENGTH_SHORT).show()
+            findNavController().navigate(R.id.action_registerFragment_to_home_fragment)
+        })
 
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Toast.makeText(context, "Register Success", Toast.LENGTH_SHORT).show()
-                    findNavController().navigate(R.id.action_registerFragment_to_home_fragment)
-                } else {
-                    Toast.makeText(context, task.exception?.message, Toast.LENGTH_SHORT).show()
-                    Timber.e(" failed cause: ${task.exception}")
-                }
-                binding.pbLoading.visibility = View.GONE
-            }
+        viewModel.registerFail.observe(viewLifecycleOwner, { e ->
+            Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
+            Timber.e("Register failed cause: $e")
+        })
     }
 }
