@@ -3,14 +3,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ui.account.AccountFragment">
 
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.dpr.hello_market.ui.account.AccountViewModel" />
+    </data>
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <ImageView
+            android:id="@+id/civ_avatar"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_gravity="top|center" />
+
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/hello_blank_fragment" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            tools:text="Haii"
+            android:text="@{viewModel.name}" />
 
         <Button
             android:id="@+id/button_logout"

@@ -8,11 +8,15 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import com.bumptech.glide.Glide
 import com.dpr.hello_market.R
 import com.dpr.hello_market.databinding.FragmentAccountBinding
 import com.dpr.hello_market.di.Injectable
 import com.dpr.hello_market.di.ViewModelFactory
 import com.dpr.hello_market.di.injectViewModel
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.ktx.storage
 import javax.inject.Inject
 
 class AccountFragment : Fragment(), Injectable {
@@ -30,16 +34,32 @@ class AccountFragment : Fragment(), Injectable {
         savedInstanceState: Bundle?
     ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_account, container, false)
+        binding.lifecycleOwner = this
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = injectViewModel(viewModelFactory)
+        binding.viewModel = viewModel
 
+        initListener()
+        initObserver()
+    }
+
+    private fun initListener() {
         binding.buttonLogout.setOnClickListener {
             viewModel.signOut()
             mainNavController?.navigate(R.id.action_main_fragment_to_loginFragment)
         }
+    }
+
+    private fun initObserver() {
+        viewModel.photoUrl.observe(viewLifecycleOwner, { url ->
+
+//            val storage = Firebase.storage.reference
+//            val gsReference = storage.url("gs://bucket/avatars/$url")
+//            Glide.with(requireContext()).load(gsReference).into(binding.civAvatar)
+        })
     }
 }

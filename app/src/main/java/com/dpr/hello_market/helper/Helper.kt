@@ -2,6 +2,7 @@ package com.dpr.hello_market.helper
 
 import android.text.TextUtils
 import android.util.Patterns
+import java.util.regex.Pattern
 
 
 object Helper {
