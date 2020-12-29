@@ -48,18 +48,15 @@ class AccountFragment : Fragment(), Injectable {
     }
 
     private fun initListener() {
-        binding.buttonLogout.setOnClickListener {
+        binding.llLogout.setOnClickListener {
             viewModel.signOut()
             mainNavController?.navigate(R.id.action_main_fragment_to_loginFragment)
         }
     }
 
     private fun initObserver() {
-        viewModel.photoUrl.observe(viewLifecycleOwner, { url ->
-
-//            val storage = Firebase.storage.reference
-//            val gsReference = storage.url("gs://bucket/avatars/$url")
-//            Glide.with(requireContext()).load(gsReference).into(binding.civAvatar)
+        viewModel.photoUrl.observe(viewLifecycleOwner, { bitmap ->
+            Glide.with(requireContext()).load(bitmap).into(binding.civAvatar)
         })
     }
 }

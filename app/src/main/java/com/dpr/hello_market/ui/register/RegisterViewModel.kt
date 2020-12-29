@@ -79,7 +79,7 @@ class RegisterViewModel @Inject constructor(app: Application) : AndroidViewModel
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful)
-                    updateProfile(name)
+                    updateProfile(name, email)
                 else {
                     _registerFail.postValue(task.exception)
                     _isLoading.postValue(false)
@@ -87,8 +87,8 @@ class RegisterViewModel @Inject constructor(app: Application) : AndroidViewModel
             }
     }
 
-    private fun updateProfile(name: String) {
-        val customer = Customer(name, "avatars/${auth.currentUser?.uid.toString()}.jpg")
+    private fun updateProfile(name: String, email: String) {
+        val customer = Customer(name, email,"avatars/${auth.currentUser?.uid.toString()}")
         database.child("customers").child(auth.currentUser?.uid.toString()).setValue(customer)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
@@ -101,7 +101,7 @@ class RegisterViewModel @Inject constructor(app: Application) : AndroidViewModel
 
     private fun uploadAvatar() {
         imageUri?.let {
-            val avatarRef = storageRef.child("avatars/${auth.currentUser?.uid.toString()}.jpg")
+            val avatarRef = storageRef.child("avatars/${auth.currentUser?.uid.toString()}")
             avatarRef.putFile(it)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
