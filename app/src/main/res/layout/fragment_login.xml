@@ -75,8 +75,11 @@
 
         <Button
             android:id="@+id/button_login"
-            android:layout_width="wrap_content"
+            style="@style/DefaultButton"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="64dp"
+            android:paddingVertical="12dp"
             android:text="@string/login"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

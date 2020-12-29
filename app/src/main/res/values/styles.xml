@@ -6,4 +6,11 @@
         <item name="android:textColor">@color/green_700</item>
         <item name="android:textStyle">bold</item>
     </style>
+
+    <style name="DefaultButton">
+        <item name="android:background">@drawable/rounded_button_with_shadow</item>
+        <item name="android:elevation">8dp</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
 </resources>

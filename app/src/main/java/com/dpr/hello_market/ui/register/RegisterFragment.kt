@@ -43,7 +43,17 @@ class RegisterFragment : Fragment(), Injectable {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        requestPermission()
+        Timber.d("requestCode $requestCode\npermissions $permissions\ngrantResults $grantResults")
+        var isAllGranted = true
+        for (grantResult in grantResults) {
+            if (grantResult == PackageManager.PERMISSION_DENIED) {
+                isAllGranted = false
+                break
+            }
+        }
+        if (isAllGranted) {
+            pickImageFromGallery()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

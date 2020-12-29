@@ -46,6 +46,8 @@ class AccountViewModel @Inject constructor(app: Application) : AndroidViewModel(
         get() = _photoUrl
 
     init {
+        Timber.d("masuk accountviewmodel pak eko")
+
         database.child("customers").child(auth.currentUser?.uid.toString())
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
