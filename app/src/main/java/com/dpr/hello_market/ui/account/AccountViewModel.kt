@@ -3,6 +3,7 @@ package com.dpr.hello_market.ui.account
 import android.app.Application
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -41,8 +42,8 @@ class AccountViewModel @Inject constructor(app: Application) : AndroidViewModel(
     val versionCode: LiveData<String>
         get() = _versionCode
 
-    private val _photoUrl = MutableLiveData<Bitmap>()
-    val photoUrl: LiveData<Bitmap>
+    private val _photoUrl = MutableLiveData<Uri>()
+    val photoUrl: LiveData<Uri>
         get() = _photoUrl
 
     init {
@@ -59,12 +60,14 @@ class AccountViewModel @Inject constructor(app: Application) : AndroidViewModel(
                     viewModelScope.launch(Dispatchers.IO) {
                         val mRef =
                             storageRef.getReferenceFromUrl("gs://hello-market-dpr.appspot.com")
-                                .child("avatars").child(auth.currentUser?.uid.toString())
-                        val mFile = File.createTempFile("avatar", "*")
-                        mRef.getFile(mFile).addOnSuccessListener {
-                            val bitmap = BitmapFactory.decodeFile(mFile.absolutePath)
-                            _photoUrl.postValue(bitmap)
+                                .child(data?.avatar ?: "")
+                        mRef.downloadUrl.addOnCompleteListener {
+                            _photoUrl.postValue(it.result)
                         }
+//                        val mFile = File.createTempFile("avatar", "*")
+//                        mRef.getFile(mFile).addOnSuccessListener {
+//                            val bitmap = BitmapFactory.decodeFile(mFile.absolutePath)
+//                        }
                     }
                 }
 

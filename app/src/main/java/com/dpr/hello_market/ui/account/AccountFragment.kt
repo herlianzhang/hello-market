@@ -48,6 +48,10 @@ class AccountFragment : Fragment(), Injectable {
     }
 
     private fun initListener() {
+        binding.llEdit.setOnClickListener {
+            mainNavController?.navigate(R.id.action_mainFragment_to_editProfileFragment)
+        }
+
         binding.llLogout.setOnClickListener {
             viewModel.signOut()
             mainNavController?.navigate(R.id.action_main_fragment_to_loginFragment)
@@ -55,8 +59,8 @@ class AccountFragment : Fragment(), Injectable {
     }
 
     private fun initObserver() {
-        viewModel.photoUrl.observe(viewLifecycleOwner, { bitmap ->
-            Glide.with(requireContext()).load(bitmap).into(binding.civAvatar)
+        viewModel.photoUrl.observe(viewLifecycleOwner, { uri ->
+            Glide.with(requireContext()).load(uri).into(binding.civAvatar)
         })
     }
 }

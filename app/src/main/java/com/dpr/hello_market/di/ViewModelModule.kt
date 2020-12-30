@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.dpr.hello_market.ui.account.AccountViewModel
 import com.dpr.hello_market.ui.decision.DecisionViewModel
+import com.dpr.hello_market.ui.edit_profile.EditProfileViewModel
 import com.dpr.hello_market.ui.login.LoginViewModel
 import com.dpr.hello_market.ui.register.RegisterViewModel
 import dagger.Binds
@@ -32,6 +33,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(AccountViewModel::class)
     abstract fun bindAccountViewModel(accountViewModel: AccountViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(EditProfileViewModel::class)
+    abstract fun bindEditProfileViewModel(editProfileViewModel: EditProfileViewModel): ViewModel
 
     @Binds
     abstract fun bindViewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory
