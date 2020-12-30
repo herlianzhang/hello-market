@@ -6,12 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.navigation.NavController
-import androidx.navigation.Navigation
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.NavigationUI
-import androidx.navigation.ui.setupWithNavController
+import androidx.viewpager2.widget.ViewPager2
 import com.dpr.hello_market.R
 import com.dpr.hello_market.databinding.FragmentMainBinding
 
@@ -19,7 +14,17 @@ class MainFragment : Fragment() {
 
     private lateinit var binding: FragmentMainBinding
 
-        override fun onCreateView(
+    private lateinit var pagerAdapter: MainPagerAdapter
+    private lateinit var pageChangeCallback: ViewPager2.OnPageChangeCallback
+
+    private val bnvIds = listOf(
+        R.id.homeFragment,
+        R.id.activityFragment,
+        R.id.cartFragment,
+        R.id.accountFragment
+    )
+
+    override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
@@ -30,9 +35,29 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val myNavHost = childFragmentManager.findFragmentById(R.id.my_frag_nav_host) as? NavHostFragment
-        val navController = myNavHost?.navController ?: return
+        initPagerAdapter()
+        initListener()
+    }
 
-        binding.bnvMain.setupWithNavController(navController)
+    private fun initPagerAdapter() {
+        pagerAdapter = MainPagerAdapter(requireActivity())
+        pageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                binding.bnvMain.selectedItemId = bnvIds[position]
+            }
+        }
+
+        binding.vpMain.apply {
+            adapter = pagerAdapter
+            registerOnPageChangeCallback(pageChangeCallback)
+        }
+    }
+
+    private fun initListener() {
+        binding.bnvMain.setOnNavigationItemSelectedListener { item ->
+            val index = bnvIds.indexOf(item.itemId)
+            binding.vpMain.currentItem = index
+            true
+        }
     }
 }
