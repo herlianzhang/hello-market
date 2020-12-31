@@ -14,6 +14,7 @@ import com.dpr.hello_market.databinding.FragmentAccountBinding
 import com.dpr.hello_market.di.Injectable
 import com.dpr.hello_market.di.ViewModelFactory
 import com.dpr.hello_market.di.injectViewModel
+import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
