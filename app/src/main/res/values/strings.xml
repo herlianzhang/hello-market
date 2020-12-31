@@ -18,4 +18,6 @@
     <string name="phone_number">Phone Number</string>
     <string name="no_data">No Data</string>
     <string name="edit_profile">Edit Profile</string>
+    <string name="address">Address</string>
+    <string name="change_password">Change Password</string>
 </resources>

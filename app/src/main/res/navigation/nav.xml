@@ -45,16 +45,16 @@
         android:label="fragment_register"
         tools:layout="@layout/fragment_register">
         <action
-                android:id="@+id/action_registerFragment_to_main_fragment"
+            android:id="@+id/action_registerFragment_to_main_fragment"
             app:destination="@id/mainFragment"
             app:popUpTo="@id/registerFragment"
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_registerFragment_to_loginFragment"
             app:destination="@id/loginFragment"
-            app:popUpTo="@id/registerFragment"
             app:enterAnim="@anim/enter_from_left"
             app:exitAnim="@anim/exit_to_right"
+            app:popUpTo="@id/registerFragment"
             app:popUpToInclusive="true" />
     </fragment>
     <fragment
@@ -69,11 +69,19 @@
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_mainFragment_to_editProfileFragment"
-            app:destination="@id/editProfileFragment" />
+            app:destination="@id/editProfileFragment"
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/exit_to_left"
+            app:popEnterAnim="@anim/enter_from_left"
+            app:popExitAnim="@anim/exit_to_right" />
     </fragment>
     <fragment
         android:id="@+id/editProfileFragment"
         android:name="com.dpr.hello_market.ui.edit_profile.EditProfileFragment"
         android:label="EditProfileFragment"
-        tools:layout="@layout/fragment_edit_profile"/>
+        tools:layout="@layout/fragment_edit_profile" >
+        <argument
+            android:name="customer"
+            app:argType="com.dpr.hello_market.vo.Customer" />
+    </fragment>
 </navigation>

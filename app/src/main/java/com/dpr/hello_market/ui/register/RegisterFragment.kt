@@ -5,22 +5,21 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.dpr.hello_market.R
 import com.dpr.hello_market.databinding.FragmentRegisterBinding
 import com.dpr.hello_market.di.Injectable
 import com.dpr.hello_market.di.injectViewModel
-import com.dpr.hello_market.helper.Helper
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -60,7 +59,7 @@ class RegisterFragment : Fragment(), Injectable {
         if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE) {
             val imageUri = data?.data
             viewModel.setImageUri(imageUri)
-            binding.civAvatar.setImageURI(imageUri)
+            Glide.with(requireContext()).load(imageUri).into(binding.civAvatar)
         }
     }
 
@@ -93,10 +92,12 @@ class RegisterFragment : Fragment(), Injectable {
         }
 
         binding.buttonRegister.setOnClickListener {
+            binding.buttonRegister.isEnabled = false
             val email = binding.etEmail.text.toString()
             val name = binding.etName.text.toString()
             val password = binding.etPassword.text.toString()
-            viewModel.createUserWithEmailAndPassword(email, name, password)
+            val phoneNumber = binding.etPhoneNumber.text.toString()
+            viewModel.createUserWithEmailAndPassword(email, name, password, phoneNumber)
         }
 
         binding.civAvatar.setOnClickListener {
@@ -112,6 +113,7 @@ class RegisterFragment : Fragment(), Injectable {
 
         viewModel.registerFail.observe(viewLifecycleOwner, { e ->
             Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
+            binding.buttonRegister.isEnabled = true
             Timber.e("Register failed cause: $e")
         })
     }
@@ -147,9 +149,9 @@ class RegisterFragment : Fragment(), Injectable {
 
     companion object {
         //image pick code
-        private val IMAGE_PICK_CODE = 1000;
+        private const val IMAGE_PICK_CODE = 1000;
 
         //Permission code
-        private val PERMISSION_CODE = 1001;
+        private const val PERMISSION_CODE = 1001;
     }
 }

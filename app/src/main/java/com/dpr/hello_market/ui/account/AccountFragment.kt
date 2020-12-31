@@ -1,23 +1,19 @@
 package com.dpr.hello_market.ui.account
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
-import com.bumptech.glide.Glide
 import com.dpr.hello_market.R
 import com.dpr.hello_market.databinding.FragmentAccountBinding
 import com.dpr.hello_market.di.Injectable
 import com.dpr.hello_market.di.ViewModelFactory
 import com.dpr.hello_market.di.injectViewModel
-import com.facebook.shimmer.ShimmerFrameLayout
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.ktx.storage
+import com.dpr.hello_market.ui.main.MainFragmentDirections
 import javax.inject.Inject
 
 class AccountFragment : Fragment(), Injectable {
@@ -50,7 +46,12 @@ class AccountFragment : Fragment(), Injectable {
 
     private fun initListener() {
         binding.llEdit.setOnClickListener {
-            mainNavController?.navigate(R.id.action_mainFragment_to_editProfileFragment)
+            val customer = viewModel.customer
+            if (customer != null) {
+                val action =
+                    MainFragmentDirections.actionMainFragmentToEditProfileFragment(customer)
+                mainNavController?.navigate(action)
+            }
         }
 
         binding.llLogout.setOnClickListener {
@@ -60,8 +61,6 @@ class AccountFragment : Fragment(), Injectable {
     }
 
     private fun initObserver() {
-        viewModel.photoUrl.observe(viewLifecycleOwner, { uri ->
-            Glide.with(requireContext()).load(uri).into(binding.civAvatar)
-        })
+
     }
 }

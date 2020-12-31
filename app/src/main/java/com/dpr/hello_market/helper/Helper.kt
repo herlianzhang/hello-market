@@ -2,7 +2,6 @@ package com.dpr.hello_market.helper
 
 import android.text.TextUtils
 import android.util.Patterns
-import java.util.regex.Pattern
 
 
 object Helper {
@@ -15,4 +14,11 @@ object Helper {
         if (target == null) return false
         return target.length >= 4
     }
+
+    fun isValidPhoneNumber(phone: String): Boolean {
+        return if (phone.trim { it <= ' ' } != "" && phone.length > 10) {
+            Patterns.PHONE.matcher(phone).matches()
+        } else false
+    }
+
 }
