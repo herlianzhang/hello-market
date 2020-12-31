@@ -13,9 +13,7 @@ data class Customer(
     var avatar: String? = "",
     var phoneNumber: String? = "",
     var password: String? = "",
-    var address: String? = "",
-    var lat: Double? = null,
-    var lng: Double? = null,
+    var location: Location? = null
 ) : Parcelable {
     @Exclude
     fun toMap(): Map<String, Any?> {
@@ -25,10 +23,7 @@ data class Customer(
             "avatar" to avatar,
             "phoneNumber" to phoneNumber,
             "password" to password,
-            "address" to address,
-            "lat" to lat,
-            "lng" to lng
-
+            "location" to location
         )
     }
 }

@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -64,13 +65,14 @@ class EditProfileFragment : Fragment(), Injectable {
                 val result = bundle.getParcelable<Location>(LOCATION_DATA)
                 result?.let {
                     Timber.d("Dapat Lokasinya di $it")
-                    binding.etAddress.setText(it.address)
+                    viewModel.setLocation(it)
                 }
             }
         }
 
         initCustomer(args.customer)
         initListener()
+        initObserver()
     }
 
     private fun initCustomer(customer: Customer) {
@@ -79,8 +81,8 @@ class EditProfileFragment : Fragment(), Injectable {
             etEmail.setText(customer.email)
             etName.setText(customer.name)
             etPhoneNumber.setText(customer.phoneNumber)
-            etAddress.setText(customer.address)
         }
+        viewModel.setLocation(customer.location)
     }
 
     private fun initListener() {
@@ -93,13 +95,34 @@ class EditProfileFragment : Fragment(), Injectable {
         }
 
         binding.btnAddress.setOnClickListener {
-            val action = EditProfileFragmentDirections.actionEditProfileFragmentToChooseLocationFragment(Location(null, null, null))
+            val currLoc = viewModel.location.value ?: Location()
+            val action =
+                EditProfileFragmentDirections.actionEditProfileFragmentToChooseLocationFragment(
+                    currLoc
+                )
             findNavController().navigate(action)
         }
 
         binding.btnEditProfile.setOnClickListener {
-
+            val name = binding.etName.text.toString()
+            val phoneNumber = binding.etPhoneNumber.text.toString()
+            val location = viewModel.location.value
+            val customer =
+                args.customer.copy(name = name, phoneNumber = phoneNumber, location = location)
+            viewModel.editProfile(customer)
         }
+    }
+
+    private fun initObserver() {
+        viewModel.editSuccess.observe(viewLifecycleOwner, {
+            Toast.makeText(context, "Edit Success", Toast.LENGTH_SHORT).show()
+            findNavController().popBackStack()
+        })
+
+        viewModel.editFail.observe(viewLifecycleOwner, { e ->
+            Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
+            Timber.e("Edit failed cause: $e")
+        })
     }
 
     private fun requestPermission() {
