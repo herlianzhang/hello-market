@@ -31,7 +31,7 @@
                 <TextView
                     style="@style/DefaultToolbarText"
                     android:layout_marginHorizontal="16dp"
-                    android:text="Edit Profile" />
+                    android:text="@string/edit_profile" />
             </LinearLayout>
         </androidx.appcompat.widget.Toolbar>
 

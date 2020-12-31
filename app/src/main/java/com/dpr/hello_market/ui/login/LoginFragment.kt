@@ -48,7 +48,6 @@ class LoginFragment : Fragment(), Injectable {
         }
 
         binding.buttonLogin.setOnClickListener {
-            binding.buttonLogin.isEnabled = false
             val email = binding.etEmail.text.toString()
             val password = binding.etPassword.text.toString()
             viewModel.signInWithEmailAndPassword(email, password)
@@ -63,7 +62,6 @@ class LoginFragment : Fragment(), Injectable {
 
         viewModel.loginFail.observe(viewLifecycleOwner, { e ->
             Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
-            binding.buttonLogin.isEnabled = true
             Timber.e("SignIn failed cause: $e")
         })
     }

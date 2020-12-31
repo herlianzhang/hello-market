@@ -79,9 +79,25 @@
         android:id="@+id/editProfileFragment"
         android:name="com.dpr.hello_market.ui.edit_profile.EditProfileFragment"
         android:label="EditProfileFragment"
-        tools:layout="@layout/fragment_edit_profile" >
+        tools:layout="@layout/fragment_edit_profile">
         <argument
             android:name="customer"
             app:argType="com.dpr.hello_market.vo.Customer" />
+        <action
+            android:id="@+id/action_editProfileFragment_to_chooseLocationFragment"
+            app:destination="@id/chooseLocationFragment"
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/exit_to_left"
+            app:popEnterAnim="@anim/enter_from_left"
+            app:popExitAnim="@anim/exit_to_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/chooseLocationFragment"
+        android:name="com.dpr.hello_market.ui.choose_location.ChooseLocationFragment"
+        android:label="fragment_choose_location"
+        tools:layout="@layout/fragment_choose_location">
+        <argument
+            android:name="location"
+            app:argType="com.dpr.hello_market.vo.Location" />
     </fragment>
 </navigation>

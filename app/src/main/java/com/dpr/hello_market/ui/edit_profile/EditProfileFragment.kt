@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -21,6 +22,7 @@ import com.dpr.hello_market.databinding.FragmentEditProfileBinding
 import com.dpr.hello_market.di.Injectable
 import com.dpr.hello_market.di.injectViewModel
 import com.dpr.hello_market.vo.Customer
+import com.dpr.hello_market.vo.Location
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -57,6 +59,16 @@ class EditProfileFragment : Fragment(), Injectable {
         viewModel = injectViewModel(viewModelFactory)
         binding.viewModel = viewModel
 
+        setFragmentResultListener(LOCATION) { requestKey, bundle ->
+            if (requestKey == LOCATION) {
+                val result = bundle.getParcelable<Location>(LOCATION_DATA)
+                result?.let {
+                    Timber.d("Dapat Lokasinya di $it")
+                    binding.etAddress.setText(it.address)
+                }
+            }
+        }
+
         initCustomer(args.customer)
         initListener()
     }
@@ -81,7 +93,8 @@ class EditProfileFragment : Fragment(), Injectable {
         }
 
         binding.btnAddress.setOnClickListener {
-            Timber.d("Minta lokasi")
+            val action = EditProfileFragmentDirections.actionEditProfileFragmentToChooseLocationFragment(Location(null, null, null))
+            findNavController().navigate(action)
         }
 
         binding.btnEditProfile.setOnClickListener {
@@ -124,5 +137,9 @@ class EditProfileFragment : Fragment(), Injectable {
 
         //Permission code
         private const val PERMISSION_CODE = 1001;
+
+        const val LOCATION = "location"
+
+        const val LOCATION_DATA = "location data"
     }
 }

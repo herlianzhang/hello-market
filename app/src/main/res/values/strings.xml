@@ -20,4 +20,6 @@
     <string name="edit_profile">Edit Profile</string>
     <string name="address">Address</string>
     <string name="change_password">Change Password</string>
+    <string name="choose_your_location">Choose Your Location</string>
+    <string name="choose_this_location">Choose this location</string>
 </resources>

@@ -92,7 +92,6 @@ class RegisterFragment : Fragment(), Injectable {
         }
 
         binding.buttonRegister.setOnClickListener {
-            binding.buttonRegister.isEnabled = false
             val email = binding.etEmail.text.toString()
             val name = binding.etName.text.toString()
             val password = binding.etPassword.text.toString()
@@ -113,7 +112,6 @@ class RegisterFragment : Fragment(), Injectable {
 
         viewModel.registerFail.observe(viewLifecycleOwner, { e ->
             Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
-            binding.buttonRegister.isEnabled = true
             Timber.e("Register failed cause: $e")
         })
     }

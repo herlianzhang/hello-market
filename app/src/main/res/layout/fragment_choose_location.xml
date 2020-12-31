@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.choose_location.ChooseLocationFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/iv_back"
+                    style="@style/DefaultToolbarBackButton" />
+
+                <TextView
+                    style="@style/DefaultToolbarText"
+                    android:layout_marginHorizontal="16dp"
+                    android:text="@string/choose_your_location" />
+            </LinearLayout>
+        </androidx.appcompat.widget.Toolbar>
+
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            app:layout_constraintVertical_bias="0.0"
+            tools:layout_editor_absoluteX="-119dp" />
+
+        <ImageView
+            android:id="@+id/iv_my_location"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="24dp"
+            android:background="@drawable/rounded_icon_button"
+            android:elevation="8dp"
+            android:padding="8dp"
+            android:src="@drawable/ic_my_location"
+            app:layout_constraintEnd_toEndOf="@id/map"
+            app:layout_constraintTop_toTopOf="@id/map" />
+
+        <ImageView
+            android:id="@+id/iv_start_choose"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="24dp"
+            android:background="@drawable/rounded_icon_button"
+            android:padding="8dp"
+            android:src="@drawable/ic_choose"
+            app:layout_constraintEnd_toEndOf="@id/map"
+            app:layout_constraintTop_toBottomOf="@id/iv_my_location"
+            app:tint="@color/white" />
+
+        <ImageView
+            android:id="@+id/iv_home_location"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="24dp"
+            android:background="@drawable/rounded_icon_button"
+            android:padding="8dp"
+            android:src="@drawable/ic_home_marker"
+            app:layout_constraintEnd_toStartOf="@id/iv_my_location"
+            app:layout_constraintTop_toTopOf="@id/map"
+            app:tint="@color/white" />
+
+        <ImageView
+            android:id="@+id/iv_save"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="24dp"
+            android:background="@drawable/rounded_icon_button"
+            android:padding="8dp"
+            android:src="@drawable/ic_save"
+            app:layout_constraintStart_toStartOf="@id/map"
+            app:layout_constraintTop_toTopOf="@id/map"
+            app:tint="@color/white" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cv_address"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="24dp"
+            app:cardCornerRadius="16dp"
+            app:layout_constraintBottom_toTopOf="@id/btn_choose_location"
+            app:layout_constraintEnd_toEndOf="@id/map"
+            app:layout_constraintStart_toStartOf="@id/map">
+
+            <TextView
+                android:id="@+id/tv_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                tools:text="Thamrin Plaza, Jl. M.H Thamrin R No.75, Pandau Hulu I, Kec. Medan Kota, Kota Medan, Sumatera Utara 20214" />
+        </androidx.cardview.widget.CardView>
+
+        <ImageView
+            android:id="@+id/icon_marker_shadow"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="66dp"
+            android:alpha="0.3"
+            android:src="@drawable/ic_circle_shape"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/icon_marker"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="26dp"
+            android:src="@drawable/ic_marker"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <Button
+            android:id="@+id/btn_choose_location"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_margin="24dp"
+            android:text="@string/choose_this_location"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/map"
+            app:layout_constraintEnd_toStartOf="@id/iv_cancel"
+            app:layout_constraintStart_toStartOf="@id/map" />
+
+        <ImageView
+            android:id="@+id/iv_cancel"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="24dp"
+            android:background="@drawable/rounded_icon_button"
+            android:padding="12dp"
+            android:src="@drawable/ic_cancel"
+            app:layout_constraintBottom_toBottomOf="@id/map"
+            app:layout_constraintEnd_toEndOf="@id/map"
+            app:tint="@color/white" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
