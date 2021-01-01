@@ -5,6 +5,6 @@
     android:layout_height="match_parent"
     tools:context=".ui.activity.ActivityFragment">
 
-    <include layout="@layout/layout_no_data" />
+    <include layout="@layout/no_data_layout" />
 
 </FrameLayout>

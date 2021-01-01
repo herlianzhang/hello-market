@@ -23,4 +23,9 @@
     <string name="choose_your_location">Choose Your Location</string>
     <string name="choose_this_location">Choose this location</string>
     <string name="set_address">Set Address</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="old_password">Old Password</string>
+    <string name="new_password">New Password</string>
+    <string name="confirm_new_password">Confirm New Password</string>
+    <string name="change_password_desc">Create your new password for Tassy so you can login to your account</string>
 </resources>

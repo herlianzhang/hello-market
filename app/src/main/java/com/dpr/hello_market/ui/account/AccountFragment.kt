@@ -1,5 +1,6 @@
 package com.dpr.hello_market.ui.account
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -53,18 +54,43 @@ class AccountFragment : Fragment(), Injectable {
                     MainFragmentDirections.actionMainFragmentToEditProfileFragment(customer)
                 mainNavController?.navigate(action)
             } else {
-                Toast.makeText(requireContext(), "Please wait until data ready", Toast.LENGTH_SHORT)
-                    .show()
+                showToast()
             }
         }
 
         binding.llChangePassword.setOnClickListener {
-
+            val customer = viewModel.customer
+            if (customer != null) {
+                val action =
+                    MainFragmentDirections.actionMainFragmentToChangePasswordFragment(
+                        customer.password ?: ""
+                    )
+                mainNavController?.navigate(action)
+            } else {
+                showToast()
+            }
         }
 
         binding.llLogout.setOnClickListener {
-            viewModel.signOut()
-            mainNavController?.navigate(R.id.action_main_fragment_to_loginFragment)
+            showLogoutAlert()
         }
+    }
+
+    private fun showLogoutAlert() {
+        AlertDialog.Builder(requireContext())
+            .setMessage("Are you sure want to logout?")
+            .setPositiveButton("yes") { _, _ ->
+                viewModel.signOut()
+                mainNavController?.navigate(R.id.action_main_fragment_to_loginFragment)
+            }
+            .setNegativeButton("No") { _, _ ->
+
+            }
+            .show()
+    }
+
+    private fun showToast() {
+        Toast.makeText(requireContext(), "Please wait until data ready", Toast.LENGTH_SHORT)
+            .show()
     }
 }
