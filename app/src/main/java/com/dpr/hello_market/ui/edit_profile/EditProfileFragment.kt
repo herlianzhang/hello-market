@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -22,6 +23,7 @@ import com.dpr.hello_market.R
 import com.dpr.hello_market.databinding.FragmentEditProfileBinding
 import com.dpr.hello_market.di.Injectable
 import com.dpr.hello_market.di.injectViewModel
+import com.dpr.hello_market.ui.account.AccountFragment
 import com.dpr.hello_market.vo.Customer
 import com.dpr.hello_market.vo.Location
 import timber.log.Timber

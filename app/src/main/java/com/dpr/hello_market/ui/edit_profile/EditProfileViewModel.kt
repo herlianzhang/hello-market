@@ -88,19 +88,23 @@ class EditProfileViewModel @Inject constructor(app: Application) : AndroidViewMo
 
         // upload avatar first
         if (imageUri != null) {
-            imageUri?.let {
-                val avatarRef =
-                    storageRef.reference.child("avatars/${auth.currentUser?.uid.toString()}")
-                avatarRef.putFile(it)
-                    .addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            editBioData(customer)
-                        } else {
-                            _isLoading.postValue(false)
-                            _editFail.postValue(task.exception)
-                        }
+            val pathName =
+                "avatars/${auth.currentUser?.uid.toString()}${System.currentTimeMillis()}"
+            storageRef.reference.child(customer.avatar ?: "").delete() // delete the old one
+                .addOnCompleteListener {
+                    imageUri?.let {
+                        storageRef.reference.child(pathName).putFile(it) // add the new one
+                            .addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+                                    customer.avatar = pathName
+                                    editBioData(customer)
+                                } else {
+                                    _isLoading.postValue(false)
+                                    _editFail.postValue(task.exception)
+                                }
+                            }
                     }
-            }
+                }
         } else {
             editBioData(customer)
         }
@@ -110,7 +114,7 @@ class EditProfileViewModel @Inject constructor(app: Application) : AndroidViewMo
         database.child("customers").child(auth.currentUser?.uid.toString()).setValue(customer)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    _editSuccess.postValue(true)
+                    _editSuccess.postValue(imageUri == null)
                 } else {
                     _editFail.postValue(task.exception)
                 }

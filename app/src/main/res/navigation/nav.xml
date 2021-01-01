@@ -74,6 +74,9 @@
             app:exitAnim="@anim/exit_to_left"
             app:popEnterAnim="@anim/enter_from_left"
             app:popExitAnim="@anim/exit_to_right" />
+        <action
+            android:id="@+id/action_mainFragment_to_changePasswordFragment"
+            app:destination="@id/changePasswordFragment" />
     </fragment>
     <fragment
         android:id="@+id/editProfileFragment"
@@ -99,5 +102,14 @@
         <argument
             android:name="location"
             app:argType="com.dpr.hello_market.vo.Location" />
+    </fragment>
+    <fragment
+        android:id="@+id/changePasswordFragment"
+        android:name="com.dpr.hello_market.ui.change_password.ChangePasswordFragment"
+        android:label="fragment_change_password"
+        tools:layout="@layout/fragment_change_password" >
+        <argument
+            android:name="currentPassword"
+            app:argType="string" />
     </fragment>
 </navigation>

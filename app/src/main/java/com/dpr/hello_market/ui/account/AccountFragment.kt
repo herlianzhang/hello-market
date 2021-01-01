@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.dpr.hello_market.R
@@ -41,7 +43,6 @@ class AccountFragment : Fragment(), Injectable {
         binding.viewModel = viewModel
 
         initListener()
-        initObserver()
     }
 
     private fun initListener() {
@@ -51,16 +52,19 @@ class AccountFragment : Fragment(), Injectable {
                 val action =
                     MainFragmentDirections.actionMainFragmentToEditProfileFragment(customer)
                 mainNavController?.navigate(action)
+            } else {
+                Toast.makeText(requireContext(), "Please wait until data ready", Toast.LENGTH_SHORT)
+                    .show()
             }
+        }
+
+        binding.llChangePassword.setOnClickListener {
+
         }
 
         binding.llLogout.setOnClickListener {
             viewModel.signOut()
             mainNavController?.navigate(R.id.action_main_fragment_to_loginFragment)
         }
-    }
-
-    private fun initObserver() {
-
     }
 }

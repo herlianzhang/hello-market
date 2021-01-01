@@ -52,7 +52,9 @@ class AccountViewModel @Inject constructor(app: Application) : AndroidViewModel(
     init {
         _isLoading.postValue(true)
 
-        database.child("customers").child(auth.currentUser?.uid.toString())
+
+
+        val test = database.child("customers").child(auth.currentUser?.uid.toString())
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val data = snapshot.getValue<Customer>()
@@ -66,20 +68,24 @@ class AccountViewModel @Inject constructor(app: Application) : AndroidViewModel(
                     _versionCode.postValue("Version ${BuildConfig.VERSION_NAME}")
                     _isLoading.postValue(false)
                     auth.currentUser?.email
-                    viewModelScope.launch(Dispatchers.IO) {
-                        val mRef =
-                            storageRef.getReferenceFromUrl("gs://hello-market-dpr.appspot.com")
-                                .child(data?.avatar ?: "")
-                        mRef.downloadUrl.addOnCompleteListener {
-                            _photoUrl.postValue(if (it.isSuccessful) it.result else Uri.parse(""))
-                        }
-                    }
+                    updateAvatar()
                 }
 
                 override fun onCancelled(error: DatabaseError) {
                     Timber.e("$error")
                 }
             })
+    }
+
+    fun updateAvatar() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val mRef =
+                storageRef.getReferenceFromUrl("gs://hello-market-dpr.appspot.com")
+                    .child(customer?.avatar ?: "")
+            mRef.downloadUrl.addOnCompleteListener {
+                _photoUrl.postValue(if (it.isSuccessful) it.result else Uri.parse(""))
+            }
+        }
     }
 
     fun signOut() {

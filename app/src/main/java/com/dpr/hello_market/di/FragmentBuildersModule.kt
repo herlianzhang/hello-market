@@ -1,6 +1,7 @@
 package com.dpr.hello_market.di
 
 import com.dpr.hello_market.ui.account.AccountFragment
+import com.dpr.hello_market.ui.change_password.ChangePasswordFragment
 import com.dpr.hello_market.ui.choose_location.ChooseLocationFragment
 import com.dpr.hello_market.ui.decision.DecisionFragment
 import com.dpr.hello_market.ui.edit_profile.EditProfileFragment
@@ -28,4 +29,7 @@ abstract class FragmentBuildersModule {
 
     @ContributesAndroidInjector
     abstract fun contributeChooseLocationFragment(): ChooseLocationFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeChangePasswordFragment(): ChangePasswordFragment
 }
