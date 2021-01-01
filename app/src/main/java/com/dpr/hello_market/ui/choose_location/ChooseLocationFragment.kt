@@ -213,8 +213,12 @@ class ChooseLocationFragment : Fragment(), Injectable {
     }
 
     private fun setTextAddress(latlng: LatLng) {
-        val location = geoCoder.getFromLocation(latlng.latitude, latlng.longitude, 1)[0]
-        binding.tvAddress.text = location.getAddressLine(0)
+        try {
+            val location = geoCoder.getFromLocation(latlng.latitude, latlng.longitude, 1).getOrNull(0)
+            binding.tvAddress.text = location?.getAddressLine(0) ?: "Not Known"
+        } catch (e: Exception) {
+            Timber.e("setText address exception; ${e.message}")
+        }
     }
 
     override fun onRequestPermissionsResult(

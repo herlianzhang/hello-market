@@ -57,8 +57,12 @@ class AccountViewModel @Inject constructor(app: Application) : AndroidViewModel(
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val data = snapshot.getValue<Customer>()
                     customer = data
-                    _name.postValue(data?.name)
-                    _email.postValue(data?.email)
+                    data?.name?.let {
+                        _name.postValue(it)
+                    }
+                    data?.email?.let {
+                        _email.postValue(it)
+                    }
                     _versionCode.postValue("Version ${BuildConfig.VERSION_NAME}")
                     _isLoading.postValue(false)
                     auth.currentUser?.email

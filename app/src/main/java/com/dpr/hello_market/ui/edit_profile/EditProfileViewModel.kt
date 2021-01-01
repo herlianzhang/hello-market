@@ -82,9 +82,28 @@ class EditProfileViewModel @Inject constructor(app: Application) : AndroidViewMo
             if (isValidName) null
             else "Name cannot be empty"
         )
-
         if (!isValidName || !isValidPhoneNumber) return
 
+        // upload avatar first
+        if (imageUri != null) {
+            imageUri?.let {
+                val avatarRef =
+                    storageRef.reference.child("avatars/${auth.currentUser?.uid.toString()}")
+                avatarRef.putFile(it)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            editBioData(customer)
+                        } else {
+                            _editFail.postValue(task.exception)
+                        }
+                    }
+            }
+        } else {
+            editBioData(customer)
+        }
+    }
+
+    private fun editBioData(customer: Customer) {
         database.child("customers").child(auth.currentUser?.uid.toString()).setValue(customer)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
