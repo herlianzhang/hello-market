@@ -1,12 +1,17 @@
 package com.dpr.hello_market.ui.choose_location
 
 import android.Manifest
+import android.app.Activity
+import android.app.AlertDialog
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
@@ -120,6 +125,13 @@ class ChooseLocationFragment : Fragment(), Injectable {
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, zoom))
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == GPS_CODE) {
+            requestPermission()
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -141,8 +153,6 @@ class ChooseLocationFragment : Fragment(), Injectable {
         } else {
             initMode(Mode.View)
         }
-
-
 
         mapFragment?.getMapAsync(callback)
         geoCoder = Geocoder(requireContext())
@@ -194,7 +204,10 @@ class ChooseLocationFragment : Fragment(), Injectable {
         }
 
         binding.ivSave.setOnClickListener {
-            setFragmentResult(EditProfileFragment.LOCATION, bundleOf(EditProfileFragment.LOCATION_DATA to myLocation))
+            setFragmentResult(
+                EditProfileFragment.LOCATION,
+                bundleOf(EditProfileFragment.LOCATION_DATA to myLocation)
+            )
             findNavController().popBackStack()
         }
     }
@@ -238,12 +251,35 @@ class ChooseLocationFragment : Fragment(), Injectable {
             )
             requestPermissions(permissions, PERMISSION_CODE)
         } else {
-            googleMap.isMyLocationEnabled = true
-            googleMap.uiSettings.isMyLocationButtonEnabled = false
-            getFusedLocationProviderClient(requireContext()).lastLocation.addOnSuccessListener { location ->
-                moveWithAnimation(LatLng(location.latitude, location.longitude), 15f)
+            if (Helper.isGpsEnabled(requireContext())) {
+                try {
+                    googleMap.isMyLocationEnabled = true
+                    googleMap.uiSettings.isMyLocationButtonEnabled = false
+                    getFusedLocationProviderClient(requireContext()).lastLocation.addOnSuccessListener { location ->
+                        if (location != null) {
+                            moveWithAnimation(LatLng(location.latitude, location.longitude), 15f)
+                        }
+                    }
+                } catch (e: Exception) {
+                    Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                requestGps()
             }
         }
+    }
+
+    private fun requestGps() {
+        val alertDialog = AlertDialog.Builder(requireContext())
+        alertDialog.setMessage("Turn on device location, which uses Google's location service.")
+            .setPositiveButton("Ok") { _, _ ->
+                val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                startActivityForResult(intent, GPS_CODE)
+            }
+            .setNegativeButton("No Thanks") { _, _ ->
+                Toast.makeText(requireContext(), "Fail to get current location", Toast.LENGTH_SHORT)
+                    .show()
+            }.show()
     }
 
     private fun chooseMode() {
@@ -295,7 +331,10 @@ class ChooseLocationFragment : Fragment(), Injectable {
 
     companion object {
         //Permission code
-        private const val PERMISSION_CODE = 1001;
+        private const val PERMISSION_CODE = 1001
+
+        //gps
+        private const val GPS_CODE = 1002
     }
 
 }

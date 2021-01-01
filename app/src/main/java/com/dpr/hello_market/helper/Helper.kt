@@ -1,7 +1,9 @@
 package com.dpr.hello_market.helper
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.*
+import android.location.LocationManager
 import android.text.TextUtils
 import android.util.Patterns
 import androidx.core.content.ContextCompat
@@ -42,5 +44,10 @@ object Helper {
         val canvas = Canvas(bitmap)
         vectorDrawable.draw(canvas)
         return BitmapDescriptorFactory.fromBitmap(bitmap)
+    }
+
+    fun isGpsEnabled(context: Context): Boolean {
+        val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
     }
 }
