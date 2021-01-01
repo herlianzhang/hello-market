@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -37,11 +38,30 @@ class EditProfileFragment : Fragment(), Injectable {
     private lateinit var binding: FragmentEditProfileBinding
     private lateinit var viewModel: EditProfileViewModel
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE) {
-            val imageUri = data?.data
+    private val startForResult = registerForActivityResult(StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val imageUri = result.data?.data
             viewModel.imageUri = imageUri
             Glide.with(requireContext()).load(imageUri).into(binding.civAvatar)
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        Timber.d("requestCode $requestCode\npermissions $permissions\ngrantResults $grantResults")
+        var isAllGranted = true
+        for (grantResult in grantResults) {
+            if (grantResult == PackageManager.PERMISSION_DENIED) {
+                isAllGranted = false
+                break
+            }
+        }
+        if (isAllGranted) {
+            pickImageFromGallery()
         }
     }
 
@@ -55,8 +75,8 @@ class EditProfileFragment : Fragment(), Injectable {
         return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         viewModel = injectViewModel(viewModelFactory)
         binding.viewModel = viewModel
 
@@ -143,7 +163,7 @@ class EditProfileFragment : Fragment(), Injectable {
             }
         } else {
             //system OS is < Marshmallow
-            pickImageFromGallery();
+            pickImageFromGallery()
         }
     }
 
@@ -151,15 +171,12 @@ class EditProfileFragment : Fragment(), Injectable {
         //Intent to pick image
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = "image/jpg"
-        startActivityForResult(intent, IMAGE_PICK_CODE)
+        startForResult.launch(intent)
     }
 
     companion object {
-        //image pick code
-        private const val IMAGE_PICK_CODE = 1000;
-
         //Permission code
-        private const val PERMISSION_CODE = 1001;
+        private const val PERMISSION_CODE = 1001
 
         const val LOCATION = "location"
 

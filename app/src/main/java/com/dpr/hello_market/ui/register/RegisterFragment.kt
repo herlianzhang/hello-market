@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -20,9 +21,6 @@ import com.dpr.hello_market.R
 import com.dpr.hello_market.databinding.FragmentRegisterBinding
 import com.dpr.hello_market.di.Injectable
 import com.dpr.hello_market.di.injectViewModel
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -34,7 +32,13 @@ class RegisterFragment : Fragment(), Injectable {
     private lateinit var binding: FragmentRegisterBinding
     private lateinit var viewModel: RegisterViewModel
 
-    private lateinit var auth: FirebaseAuth
+    private val startForResult = registerForActivityResult(StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val imageUri = result.data?.data
+            viewModel.setImageUri(imageUri)
+            Glide.with(requireContext()).load(imageUri).into(binding.civAvatar)
+        }
+    }
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -55,14 +59,6 @@ class RegisterFragment : Fragment(), Injectable {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE) {
-            val imageUri = data?.data
-            viewModel.setImageUri(imageUri)
-            Glide.with(requireContext()).load(imageUri).into(binding.civAvatar)
-        }
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -72,13 +68,8 @@ class RegisterFragment : Fragment(), Injectable {
         return binding.root
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        auth = Firebase.auth
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         viewModel = injectViewModel(viewModelFactory)
         binding.viewModel = viewModel
 
@@ -142,13 +133,10 @@ class RegisterFragment : Fragment(), Injectable {
         //Intent to pick image
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = "image/jpg"
-        startActivityForResult(intent, IMAGE_PICK_CODE)
+        startForResult.launch(intent)
     }
 
     companion object {
-        //image pick code
-        private const val IMAGE_PICK_CODE = 1000;
-
         //Permission code
         private const val PERMISSION_CODE = 1001;
     }

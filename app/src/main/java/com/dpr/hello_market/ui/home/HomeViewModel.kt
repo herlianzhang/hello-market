@@ -1,4 +1,4 @@
-package com.dpr.hello_market.ui.account
+package com.dpr.hello_market.ui.home
 
 import android.app.Application
 import android.net.Uri
@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
-class AccountViewModel @Inject constructor(app: Application) : AndroidViewModel(app) {
+class HomeViewModel @Inject constructor(app: Application) : AndroidViewModel(app) {
     private val auth: FirebaseAuth = Firebase.auth
     private val database = Firebase.database.reference
     private val storageRef = Firebase.storage
@@ -33,38 +33,19 @@ class AccountViewModel @Inject constructor(app: Application) : AndroidViewModel(
     val name: LiveData<String>
         get() = _name
 
-    private val _email = MutableLiveData<String>()
-    val email: LiveData<String>
-        get() = _email
-
-    private val _versionCode = MutableLiveData<String>()
-    val versionCode: LiveData<String>
-        get() = _versionCode
-
-    private val _isLoading = MutableLiveData<Boolean>()
-    val isLoading: LiveData<Boolean>
-        get() = _isLoading
-
     private val _photoUrl = MutableLiveData<Uri>()
     val photoUrl: LiveData<Uri>
         get() = _photoUrl
 
     init {
-        _isLoading.postValue(true)
-
         database.child("customers").child(auth.currentUser?.uid.toString())
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val data = snapshot.getValue<Customer>()
                     customer = data
                     data?.name?.let {
-                        _name.postValue(it)
+                        _name.postValue("Hello $it")
                     }
-                    data?.email?.let {
-                        _email.postValue(it)
-                    }
-                    _versionCode.postValue("Version ${BuildConfig.VERSION_NAME}")
-                    _isLoading.postValue(false)
                     auth.currentUser?.email
                     updateAvatar()
                 }
@@ -75,6 +56,7 @@ class AccountViewModel @Inject constructor(app: Application) : AndroidViewModel(
             })
     }
 
+
     fun updateAvatar() {
         viewModelScope.launch(Dispatchers.IO) {
             val mRef =
@@ -84,9 +66,5 @@ class AccountViewModel @Inject constructor(app: Application) : AndroidViewModel(
                 _photoUrl.postValue(if (it.isSuccessful) it.result else Uri.parse(""))
             }
         }
-    }
-
-    fun signOut() {
-        auth.signOut()
     }
 }

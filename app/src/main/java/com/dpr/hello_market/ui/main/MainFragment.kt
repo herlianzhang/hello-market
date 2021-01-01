@@ -35,8 +35,16 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initPagerAdapter()
         initListener()
+        initPagerAdapter()
+    }
+
+    private fun initListener() {
+        binding.bnvMain.setOnNavigationItemSelectedListener { item ->
+            val index = bnvIds.indexOf(item.itemId)
+            binding.vpMain.currentItem = index
+            true
+        }
     }
 
     private fun initPagerAdapter() {
@@ -50,14 +58,6 @@ class MainFragment : Fragment() {
         binding.vpMain.apply {
             adapter = pagerAdapter
             registerOnPageChangeCallback(pageChangeCallback)
-        }
-    }
-
-    private fun initListener() {
-        binding.bnvMain.setOnNavigationItemSelectedListener { item ->
-            val index = bnvIds.indexOf(item.itemId)
-            binding.vpMain.currentItem = index
-            true
         }
     }
 }

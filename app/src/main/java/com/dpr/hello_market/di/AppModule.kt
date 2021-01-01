@@ -1,6 +1,5 @@
 package com.dpr.hello_market.di
 
-import com.dpr.hello_market.BuildConfig
 import com.dpr.hello_market.api.ApiService
 import com.dpr.hello_market.api.AuthInterceptor
 import dagger.Module

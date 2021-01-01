@@ -68,29 +68,33 @@ class ChangePasswordViewModel @Inject constructor(app: Application) : AndroidVie
 
         _isLoading.postValue(true)
 
-        if (currentPassword != oldPassword) {
-            _changePasswordFail.postValue("Your old password is incorrect")
-            _isLoading.postValue(false)
-        } else if (oldPassword == newPassword) {
-            _changePasswordFail.postValue("Your new password cannot be same as old password")
-            _isLoading.postValue(false)
-        } else {
-            val user = auth.currentUser
-            user?.updatePassword(newPassword)?.addOnCompleteListener {
-                if (it.isSuccessful) {
-                    database.child("customers").child(auth.currentUser?.uid.toString())
-                        .child("password").setValue(newPassword)
-                        .addOnCompleteListener { task ->
-                            if (task.isSuccessful) {
-                                _changePasswordSuccess.postValue(true)
-                            } else {
-                                _changePasswordFail.postValue(it.exception?.message)
+        when {
+            currentPassword != oldPassword -> {
+                _changePasswordFail.postValue("Your old password is incorrect")
+                _isLoading.postValue(false)
+            }
+            oldPassword == newPassword -> {
+                _changePasswordFail.postValue("Your new password cannot be same as old password")
+                _isLoading.postValue(false)
+            }
+            else -> {
+                val user = auth.currentUser
+                user?.updatePassword(newPassword)?.addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        database.child("customers").child(auth.currentUser?.uid.toString())
+                            .child("password").setValue(newPassword)
+                            .addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+                                    _changePasswordSuccess.postValue(true)
+                                } else {
+                                    _changePasswordFail.postValue(it.exception?.message)
+                                }
+                                _isLoading.postValue(false)
                             }
-                            _isLoading.postValue(false)
-                        }
-                } else {
-                    _changePasswordFail.postValue(it.exception?.message)
-                    _isLoading.postValue(false)
+                    } else {
+                        _changePasswordFail.postValue(it.exception?.message)
+                        _isLoading.postValue(false)
+                    }
                 }
             }
         }

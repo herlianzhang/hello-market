@@ -1,8 +1,8 @@
 package com.dpr.hello_market.helper
 
 import android.content.Context
-import android.content.Intent
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.location.LocationManager
 import android.text.TextUtils
 import android.util.Patterns

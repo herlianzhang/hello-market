@@ -7,6 +7,7 @@ import com.dpr.hello_market.ui.change_password.ChangePasswordViewModel
 import com.dpr.hello_market.ui.choose_location.ChooseLocationViewModel
 import com.dpr.hello_market.ui.decision.DecisionViewModel
 import com.dpr.hello_market.ui.edit_profile.EditProfileViewModel
+import com.dpr.hello_market.ui.home.HomeViewModel
 import com.dpr.hello_market.ui.login.LoginViewModel
 import com.dpr.hello_market.ui.register.RegisterViewModel
 import dagger.Binds
@@ -50,6 +51,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ChangePasswordViewModel::class)
     abstract fun bindChangePasswordViewModel(changePasswordViewModel: ChangePasswordViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(HomeViewModel::class)
+    abstract fun bindHomeViewModel(homeViewModel: HomeViewModel): ViewModel
 
     @Binds
     abstract fun bindViewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory

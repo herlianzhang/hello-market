@@ -1,7 +1,6 @@
 package com.dpr.hello_market.ui.choose_location
 
 import android.Manifest
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -30,11 +29,9 @@ import com.dpr.hello_market.ui.edit_profile.EditProfileFragment
 import com.dpr.hello_market.vo.Location
 import com.google.android.gms.location.LocationServices.getFusedLocationProviderClient
 import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import timber.log.Timber
 import javax.inject.Inject
@@ -51,26 +48,19 @@ class ChooseLocationFragment : Fragment(), Injectable {
     private lateinit var binding: FragmentChooseLocationBinding
     private lateinit var viewModel: ChooseLocationViewModel
 
-
     private val args: ChooseLocationFragmentArgs by navArgs()
 
-    private lateinit var googleMap: GoogleMap
-    private lateinit var geoCoder: Geocoder
-
-    private var homeMarker: Marker? = null
-    private lateinit var myLocation: Location
-
     private val callback = OnMapReadyCallback { googleMap ->
-        this.googleMap = googleMap
+        viewModel.googleMap = googleMap
         val myPosition: LatLng
-        if (myLocation.lat == null || myLocation.lng == null) {
+        if (viewModel.myLocation.lat == null || viewModel.myLocation.lng == null) {
             myPosition = LatLng(3.58333, 98.66667)
             moveWithAnimation(
                 myPosition,
                 15f
             )
         } else {
-            myPosition = LatLng(myLocation.lat!!, myLocation.lng!!)
+            myPosition = LatLng(viewModel.myLocation.lat!!, viewModel.myLocation.lng!!)
             addHomeMarker(myPosition)
             moveWithAnimation(
                 myPosition
@@ -100,124 +90,10 @@ class ChooseLocationFragment : Fragment(), Injectable {
         }
     }
 
-    private fun addHomeMarker(location: LatLng) {
-        homeMarker = googleMap.addMarker(
-            MarkerOptions()
-                .position(location)
-                .title("Your Home")
-                .icon(
-                    Helper.bitmapDescriptorFromVector(
-                        requireContext(),
-                        R.drawable.ic_home_marker
-                    )
-                )
-        )
-    }
-
-    private fun removeHomeMarker() {
-        homeMarker?.remove()
-    }
-
-    private fun moveWithAnimation(
-        location: LatLng = googleMap.cameraPosition.target,
-        zoom: Float = 10f
-    ) {
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, zoom))
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == GPS_CODE) {
             requestPermission()
-        }
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_choose_location, container, false)
-        return binding.root
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(ChooseLocationViewModel::class.java)
-        val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
-        myLocation = args.location
-
-        if (myLocation.lat == null || myLocation.lng == null) {
-            initMode(Mode.Choose)
-            binding.ivHomeLocation.isVisible = false
-        } else {
-            initMode(Mode.View)
-        }
-
-        mapFragment?.getMapAsync(callback)
-        geoCoder = Geocoder(requireContext())
-
-        initListener()
-    }
-
-    private fun initListener() {
-        binding.ivBack.setOnClickListener {
-            findNavController().popBackStack()
-        }
-
-        binding.ivMyLocation.setOnClickListener {
-            requestPermission()
-        }
-
-        binding.ivHomeLocation.setOnClickListener {
-            homeMarker?.position?.let { latlng ->
-                moveWithAnimation(latlng, 15f)
-            }
-        }
-
-        binding.ivStartChoose.setOnClickListener {
-            removeHomeMarker()
-            chooseMode()
-        }
-
-        binding.ivCancel.setOnClickListener {
-            val myLat = myLocation.lat
-            val myLng = myLocation.lng
-            if (myLat != null && myLng != null) {
-                addHomeMarker(LatLng(myLat, myLng))
-            }
-            viewMode()
-        }
-
-        binding.btnChooseLocation.setOnClickListener {
-            val currLatLng = googleMap.cameraPosition.target
-            val address = geoCoder.getFromLocation(
-                currLatLng.latitude,
-                currLatLng.longitude,
-                1
-            )[0].getAddressLine(0)
-            addHomeMarker(currLatLng)
-            myLocation = Location(address, currLatLng.latitude, currLatLng.longitude)
-            viewMode()
-            if (!binding.ivHomeLocation.isVisible)
-                binding.ivHomeLocation.isVisible = true
-        }
-
-        binding.ivSave.setOnClickListener {
-            setFragmentResult(
-                EditProfileFragment.LOCATION,
-                bundleOf(EditProfileFragment.LOCATION_DATA to myLocation)
-            )
-            findNavController().popBackStack()
-        }
-    }
-
-    private fun setTextAddress(latlng: LatLng) {
-        try {
-            val location = geoCoder.getFromLocation(latlng.latitude, latlng.longitude, 1).getOrNull(0)
-            binding.tvAddress.text = location?.getAddressLine(0) ?: "Not Known"
-        } catch (e: Exception) {
-            Timber.e("setText address exception; ${e.message}")
         }
     }
 
@@ -240,50 +116,102 @@ class ChooseLocationFragment : Fragment(), Injectable {
         }
     }
 
-    private fun requestPermission() {
-        if (ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            val permissions = arrayOf(
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            )
-            requestPermissions(permissions, PERMISSION_CODE)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_choose_location, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel = ViewModelProvider(this).get(ChooseLocationViewModel::class.java)
+        val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
+        viewModel.myLocation = args.location
+
+        if (viewModel.myLocation.lat == null || viewModel.myLocation.lng == null) {
+            initMode(Mode.Choose)
+            binding.ivHomeLocation.isVisible = false
         } else {
-            if (Helper.isGpsEnabled(requireContext())) {
-                try {
-                    googleMap.isMyLocationEnabled = true
-                    googleMap.uiSettings.isMyLocationButtonEnabled = false
-                    getFusedLocationProviderClient(requireContext()).lastLocation.addOnSuccessListener { location ->
-                        if (location != null) {
-                            moveWithAnimation(LatLng(location.latitude, location.longitude), 15f)
-                        }
-                    }
-                } catch (e: Exception) {
-                    Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()
-                }
-            } else {
-                requestGps()
+            initMode(Mode.View)
+        }
+
+        mapFragment?.getMapAsync(callback)
+        viewModel.geoCoder = Geocoder(requireContext())
+
+        initListener()
+    }
+
+    private fun initListener() {
+        binding.ivBack.setOnClickListener {
+            findNavController().popBackStack()
+        }
+
+        binding.ivMyLocation.setOnClickListener {
+            requestPermission()
+        }
+
+        binding.ivHomeLocation.setOnClickListener {
+            viewModel.homeMarker?.position?.let { latlng ->
+                moveWithAnimation(latlng, 15f)
             }
+        }
+
+        binding.ivStartChoose.setOnClickListener {
+            removeHomeMarker()
+            chooseMode()
+        }
+
+        binding.ivCancel.setOnClickListener {
+            val myLat = viewModel.myLocation.lat
+            val myLng = viewModel.myLocation.lng
+            if (myLat != null && myLng != null) {
+                addHomeMarker(LatLng(myLat, myLng))
+            }
+            viewMode()
+        }
+
+        binding.btnChooseLocation.setOnClickListener {
+            val currLatLng = viewModel.googleMap.cameraPosition.target
+            val address = viewModel.geoCoder.getFromLocation(
+                currLatLng.latitude,
+                currLatLng.longitude,
+                1
+            )[0].getAddressLine(0)
+            addHomeMarker(currLatLng)
+            viewModel.myLocation = Location(address, currLatLng.latitude, currLatLng.longitude)
+            viewMode()
+            if (!binding.ivHomeLocation.isVisible)
+                binding.ivHomeLocation.isVisible = true
+        }
+
+        binding.ivSave.setOnClickListener {
+            setFragmentResult(
+                EditProfileFragment.LOCATION,
+                bundleOf(EditProfileFragment.LOCATION_DATA to viewModel.myLocation)
+            )
+            findNavController().popBackStack()
         }
     }
 
-    private fun requestGps() {
-        val alertDialog = AlertDialog.Builder(requireContext())
-        alertDialog.setMessage("Turn on device location, which uses Google's location service.")
-            .setPositiveButton("Ok") { _, _ ->
-                val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-                startActivityForResult(intent, GPS_CODE)
-            }
-            .setNegativeButton("No Thanks") { _, _ ->
-                Toast.makeText(requireContext(), "Fail to get current location", Toast.LENGTH_SHORT)
-                    .show()
-            }.show()
+    private fun initMode(mode: Mode) {
+        if (mode == Mode.Choose) { // chooseMode
+            binding.ivStartChoose.translationY = -64.dp.toFloat()
+            binding.ivSave.translationX = -64.dp.toFloat()
+            binding.ivHomeLocation.translationX = 64.dp.toFloat()
+
+            binding.iconMarkerShadow.isVisible = true
+            binding.iconMarker.isVisible = true
+        } else { // viewMode
+            binding.ivCancel.translationX = 64.dp.toFloat()
+            binding.btnChooseLocation.translationY = 64.dp.toFloat()
+
+            binding.cvAddress.isVisible = false
+            binding.iconMarkerShadow.isVisible = false
+            binding.iconMarker.isVisible = false
+        }
     }
 
     private fun chooseMode() {
@@ -315,22 +243,83 @@ class ChooseLocationFragment : Fragment(), Injectable {
         binding.iconMarker.isVisible = false
     }
 
-    private fun initMode(mode: Mode) {
-        if (mode == Mode.Choose) { // chooseMode
-            binding.ivStartChoose.translationY = -64.dp.toFloat()
-            binding.ivSave.translationX = -64.dp.toFloat()
-            binding.ivHomeLocation.translationX = 64.dp.toFloat()
+    private fun addHomeMarker(location: LatLng) {
+        viewModel.homeMarker = viewModel.googleMap.addMarker(
+            MarkerOptions()
+                .position(location)
+                .title("Your Home")
+                .icon(
+                    Helper.bitmapDescriptorFromVector(
+                        requireContext(),
+                        R.drawable.ic_home_marker
+                    )
+                )
+        )
+    }
 
-            binding.iconMarkerShadow.isVisible = true
-            binding.iconMarker.isVisible = true
-        } else { // viewMode
-            binding.ivCancel.translationX = 64.dp.toFloat()
-            binding.btnChooseLocation.translationY = 64.dp.toFloat()
+    private fun removeHomeMarker() {
+        viewModel.homeMarker?.remove()
+    }
 
-            binding.cvAddress.isVisible = false
-            binding.iconMarkerShadow.isVisible = false
-            binding.iconMarker.isVisible = false
+    private fun moveWithAnimation(
+        location: LatLng = viewModel.googleMap.cameraPosition.target,
+        zoom: Float = 10f
+    ) = viewModel.googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, zoom))
+
+    private fun setTextAddress(latlng: LatLng) {
+        try {
+            val location =
+                viewModel.geoCoder.getFromLocation(latlng.latitude, latlng.longitude, 1).getOrNull(0)
+            binding.tvAddress.text = location?.getAddressLine(0) ?: "Not Known"
+        } catch (e: Exception) {
+            Timber.e("setText address exception; ${e.message}")
         }
+    }
+
+    private fun requestPermission() {
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            val permissions = arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
+            requestPermissions(permissions, PERMISSION_CODE)
+        } else {
+            if (Helper.isGpsEnabled(requireContext())) {
+                try {
+                    viewModel.googleMap.isMyLocationEnabled = true
+                    viewModel.googleMap.uiSettings.isMyLocationButtonEnabled = false
+                    getFusedLocationProviderClient(requireContext()).lastLocation.addOnSuccessListener { location ->
+                        if (location != null) {
+                            moveWithAnimation(LatLng(location.latitude, location.longitude), 15f)
+                        }
+                    }
+                } catch (e: Exception) {
+                    Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                requestGps()
+            }
+        }
+    }
+
+    private fun requestGps() {
+        val alertDialog = AlertDialog.Builder(requireContext())
+        alertDialog.setMessage("Turn on device location, which uses Google's location service.")
+            .setPositiveButton("Ok") { _, _ ->
+                val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                startActivityForResult(intent, GPS_CODE)
+            }
+            .setNegativeButton("No Thanks") { _, _ ->
+                Toast.makeText(requireContext(), "Fail to get current location", Toast.LENGTH_SHORT)
+                    .show()
+            }.show()
     }
 
     companion object {
@@ -340,5 +329,4 @@ class ChooseLocationFragment : Fragment(), Injectable {
         //gps
         private const val GPS_CODE = 1002
     }
-
 }
