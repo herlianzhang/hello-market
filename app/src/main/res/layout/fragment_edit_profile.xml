@@ -153,6 +153,10 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent" />
 
+        <include
+            android:id="@+id/loading"
+            isVisible="@{viewModel.isLoading}"
+            layout="@layout/loading_layout" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

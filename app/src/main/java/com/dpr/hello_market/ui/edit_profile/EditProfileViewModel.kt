@@ -84,6 +84,8 @@ class EditProfileViewModel @Inject constructor(app: Application) : AndroidViewMo
         )
         if (!isValidName || !isValidPhoneNumber) return
 
+        _isLoading.postValue(true)
+
         // upload avatar first
         if (imageUri != null) {
             imageUri?.let {
@@ -94,6 +96,7 @@ class EditProfileViewModel @Inject constructor(app: Application) : AndroidViewMo
                         if (task.isSuccessful) {
                             editBioData(customer)
                         } else {
+                            _isLoading.postValue(false)
                             _editFail.postValue(task.exception)
                         }
                     }
@@ -111,6 +114,7 @@ class EditProfileViewModel @Inject constructor(app: Application) : AndroidViewMo
                 } else {
                     _editFail.postValue(task.exception)
                 }
+                _isLoading.postValue(false)
             }
     }
 }
