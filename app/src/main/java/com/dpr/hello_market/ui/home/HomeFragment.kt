@@ -19,18 +19,21 @@ import javax.inject.Inject
 
 class HomeFragment : Fragment(), Injectable {
 
+    private val delay = 5000L
+
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var binding: FragmentHomeBinding
     private lateinit var viewModel: HomeViewModel
 
+
     lateinit var mainHandler: Handler
 
     private val updateTextTask = object : Runnable {
         override fun run() {
+            mainHandler.postDelayed(this, delay)
             moveBanner()
-            mainHandler.postDelayed(this, 5000)
         }
     }
 
@@ -73,7 +76,7 @@ class HomeFragment : Fragment(), Injectable {
     override fun onResume() {
         super.onResume()
         if (viewModel.banner.value != null)
-            mainHandler.post(updateTextTask)
+            mainHandler.postDelayed(updateTextTask, delay)
     }
 
 
@@ -95,7 +98,8 @@ class HomeFragment : Fragment(), Injectable {
         viewModel.banner.observe(viewLifecycleOwner, { banners ->
             bannerAdapter.submitList(banners.toMutableList())
             binding.indicator.createIndicators(banners.size, 0)
-            mainHandler.post(updateTextTask)
+            if (!mainHandler.hasCallbacks(updateTextTask))
+                mainHandler.postDelayed(updateTextTask, delay)
         })
     }
 
