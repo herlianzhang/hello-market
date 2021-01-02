@@ -6,7 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.dpr.hello_market.BuildConfig
+import com.dpr.hello_market.vo.Category
 import com.dpr.hello_market.vo.Customer
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -37,6 +37,10 @@ class HomeViewModel @Inject constructor(app: Application) : AndroidViewModel(app
     val photoUrl: LiveData<Uri>
         get() = _photoUrl
 
+    private val _categories = MutableLiveData<List<Category>>()
+    val categories: LiveData<List<Category>>
+        get() = _categories
+
     init {
         database.child("customers").child(auth.currentUser?.uid.toString())
             .addValueEventListener(object : ValueEventListener {
@@ -51,9 +55,34 @@ class HomeViewModel @Inject constructor(app: Application) : AndroidViewModel(app
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-                    Timber.e("$error")
+                    Timber.e("get customer fail cause $error")
                 }
             })
+
+        database.child("Category").addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                try {
+                    val categories = mutableListOf<Category>()
+                    for (valueRes in snapshot.children) {
+                        categories.add(
+                            Category(
+                                valueRes.key,
+                                (valueRes.value as Map<String, Any>)["Picture"] as String
+                            )
+                        )
+                    }
+                    Timber.d("listnya $categories")
+                    _categories.postValue(categories)
+                } catch (e: Exception) {
+                    Timber.e("Get Category error ${e.message}")
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Timber.e("get category fail cause $error")
+            }
+
+        })
     }
 
 

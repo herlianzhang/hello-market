@@ -11,6 +11,7 @@ import com.dpr.hello_market.R
 import com.dpr.hello_market.databinding.FragmentHomeBinding
 import com.dpr.hello_market.di.Injectable
 import com.dpr.hello_market.di.injectViewModel
+import timber.log.Timber
 import javax.inject.Inject
 
 class HomeFragment : Fragment(), Injectable {
@@ -20,6 +21,10 @@ class HomeFragment : Fragment(), Injectable {
 
     private lateinit var binding: FragmentHomeBinding
     private lateinit var viewModel: HomeViewModel
+
+    private val categoryAdapter by lazy {
+        HomeCategoryAdapter()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,5 +39,19 @@ class HomeFragment : Fragment(), Injectable {
         super.onViewCreated(view, savedInstanceState)
         viewModel = injectViewModel(viewModelFactory)
         binding.viewModel = viewModel
+
+        initAdapter()
+        initObserver()
+    }
+
+    private fun initAdapter() {
+        binding.rvCategory.adapter = categoryAdapter
+    }
+
+    private fun initObserver() {
+        viewModel.categories.observe(viewLifecycleOwner, { categories ->
+            Timber.d("Masuk pak eko $categories")
+            categoryAdapter.submitList(categories)
+        })
     }
 }
