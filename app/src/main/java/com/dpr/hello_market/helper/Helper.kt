@@ -19,7 +19,7 @@ object Helper {
 
     fun isValidPassword(target: String?): Boolean {
         if (target == null) return false
-        return target.length >= 4
+        return target.length >= 6
     }
 
     fun isValidPhoneNumber(phone: String): Boolean {

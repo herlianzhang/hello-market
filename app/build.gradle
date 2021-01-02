@@ -124,4 +124,6 @@ dependencies {
 
     // lottie
     implementation "com.airbnb.android:lottie:3.4.4"
+
+    implementation 'me.relex:circleindicator:2.1.4'
 }

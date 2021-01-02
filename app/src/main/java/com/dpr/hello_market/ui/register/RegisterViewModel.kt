@@ -67,7 +67,7 @@ class RegisterViewModel @Inject constructor(app: Application) : AndroidViewModel
 
         _errorPassword.postValue(
             if (isValidPassword) null
-            else "Password must be at least 4 character"
+            else "Password must be at least 6 character"
         )
 
         _errorPhoneNumber.postValue(

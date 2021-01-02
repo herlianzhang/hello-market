@@ -51,12 +51,12 @@ class ChangePasswordViewModel @Inject constructor(app: Application) : AndroidVie
 
         _errorOldPassword.postValue(
             if (isValidOldPassword) null
-            else "Password must be at least 4 character"
+            else "Password must be at least 6 character"
         )
 
         _errorNewPassword.postValue(
             if (isValidNewPassword) null
-            else "Password must be at least 4 character"
+            else "Password must be at least 6 character"
         )
 
         _errorConfirmPassword.postValue(
