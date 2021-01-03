@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.dpr.hello_market.BuildConfig
 import com.dpr.hello_market.vo.Category
 import com.dpr.hello_market.vo.Customer
 import com.google.firebase.auth.FirebaseAuth
@@ -38,7 +39,7 @@ class HomeViewModel @Inject constructor(app: Application) : AndroidViewModel(app
         get() = _name
 
     private val _greeting = MutableLiveData<String>()
-    val greeting:  LiveData<String>
+    val greeting: LiveData<String>
         get() = _greeting
 
     private val _photoUrl = MutableLiveData<Uri>()
@@ -108,7 +109,7 @@ class HomeViewModel @Inject constructor(app: Application) : AndroidViewModel(app
                     }
                     Timber.d("bannernya $banners")
                     _banner.postValue(banners)
-                } catch(e: Exception) {
+                } catch (e: Exception) {
                     Timber.e("Get Banner error ${e.message}")
                 }
             }
@@ -120,11 +121,10 @@ class HomeViewModel @Inject constructor(app: Application) : AndroidViewModel(app
         })
     }
 
-
     fun updateAvatar() {
         viewModelScope.launch(Dispatchers.IO) {
             val mRef =
-                storageRef.getReferenceFromUrl("gs://hello-market-dpr.appspot.com")
+                storageRef.getReferenceFromUrl(BuildConfig.STORAGE_URL)
                     .child(customer?.avatar ?: "")
             mRef.downloadUrl.addOnCompleteListener {
                 _photoUrl.postValue(if (it.isSuccessful) it.result else Uri.parse(""))

@@ -1,4 +1,4 @@
-package com.dpr.hello_market.ui.home
+package com.dpr.hello_market.ui.home.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.dpr.hello_market.BuildConfig
 import com.dpr.hello_market.databinding.ItemBannerBinding
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -32,7 +33,7 @@ class HomeBannerAdapter : ListAdapter<String, HomeBannerAdapter.ViewHolder>(Diff
 
         private fun getBannerImage(link: String) {
             val mRef =
-                storageRef.getReferenceFromUrl("gs://hello-market-dpr.appspot.com")
+                storageRef.getReferenceFromUrl(BuildConfig.STORAGE_URL)
                     .child(link)
             mRef.downloadUrl.addOnCompleteListener {
                 if (it.isSuccessful) {

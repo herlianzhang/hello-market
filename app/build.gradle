@@ -9,12 +9,12 @@ plugins {
 
 android {
     signingConfigs {
-//        hellomarket {
-//            storeFile file('/home/herlianzhang/Documents/study/pkti/HelloMarket/app/HelloMarket.jks')
-//            storePassword 'test123'
-//            keyAlias 'key0'
-//            keyPassword 'test123'
-//        }
+        hellomarket {
+            storeFile file('./HelloMarket.jks')
+            storePassword 'test123'
+            keyAlias 'key0'
+            keyPassword 'test123'
+        }
     }
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
@@ -26,6 +26,8 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField "String", "STORAGE_URL", "\"gs://hello-market-dpr.appspot.com\""
     }
     buildFeatures {
         dataBinding true
@@ -33,7 +35,7 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-//            signingConfig signingConfigs.hellomarket
+            signingConfig signingConfigs.hellomarket
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }

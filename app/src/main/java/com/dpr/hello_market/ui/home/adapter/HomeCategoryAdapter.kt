@@ -1,4 +1,4 @@
-package com.dpr.hello_market.ui.home
+package com.dpr.hello_market.ui.home.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

@@ -78,7 +78,7 @@ class AccountViewModel @Inject constructor(app: Application) : AndroidViewModel(
     fun updateAvatar() {
         viewModelScope.launch(Dispatchers.IO) {
             val mRef =
-                storageRef.getReferenceFromUrl("gs://hello-market-dpr.appspot.com")
+                storageRef.getReferenceFromUrl(BuildConfig.STORAGE_URL)
                     .child(customer?.avatar ?: "")
             mRef.downloadUrl.addOnCompleteListener {
                 _photoUrl.postValue(if (it.isSuccessful) it.result else Uri.parse(""))

@@ -14,6 +14,8 @@ import com.dpr.hello_market.R
 import com.dpr.hello_market.databinding.FragmentHomeBinding
 import com.dpr.hello_market.di.Injectable
 import com.dpr.hello_market.di.injectViewModel
+import com.dpr.hello_market.ui.home.adapter.HomeBannerAdapter
+import com.dpr.hello_market.ui.home.adapter.HomeCategoryAdapter
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -32,8 +34,8 @@ class HomeFragment : Fragment(), Injectable {
 
     private val updateTextTask = object : Runnable {
         override fun run() {
-            mainHandler.postDelayed(this, delay)
             moveBanner()
+            mainHandler.postDelayed(this, delay)
         }
     }
 
@@ -105,7 +107,8 @@ class HomeFragment : Fragment(), Injectable {
 
     private fun moveBanner() {
         if (bannerAdapter.itemCount != 0) {
-            var position = (binding.rvBanner.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
+            var position =
+                (binding.rvBanner.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
             position = (position + 1) % bannerAdapter.itemCount
             binding.rvBanner.smoothScrollToPosition(position)
         }
