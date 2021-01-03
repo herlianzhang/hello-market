@@ -9,6 +9,7 @@ import com.dpr.hello_market.ui.decision.DecisionViewModel
 import com.dpr.hello_market.ui.edit_profile.EditProfileViewModel
 import com.dpr.hello_market.ui.home.HomeViewModel
 import com.dpr.hello_market.ui.login.LoginViewModel
+import com.dpr.hello_market.ui.product.list.ProductListViewModel
 import com.dpr.hello_market.ui.product.subcategory.SubcategoryViewModel
 import com.dpr.hello_market.ui.register.RegisterViewModel
 import dagger.Binds
@@ -62,6 +63,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(SubcategoryViewModel::class)
     abstract fun bindSubcategoryViewModel(subcategoryViewModel: SubcategoryViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ProductListViewModel::class)
+    abstract fun bindProductListViewModel(productListViewModel: ProductListViewModel): ViewModel
 
     @Binds
     abstract fun bindViewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory

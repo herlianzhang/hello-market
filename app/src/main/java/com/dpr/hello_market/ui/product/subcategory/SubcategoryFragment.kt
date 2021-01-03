@@ -20,7 +20,7 @@ import com.facebook.stetho.dumpapp.ArgsHelper
 import timber.log.Timber
 import javax.inject.Inject
 
-class SubcategoryFragment : Fragment(), Injectable {
+class SubcategoryFragment : Fragment(), Injectable, SubcategoryAdapter.OnClickListener {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -31,7 +31,7 @@ class SubcategoryFragment : Fragment(), Injectable {
     private val args: SubcategoryFragmentArgs by navArgs()
 
     private val subcategoryAdapter by lazy {
-        SubcategoryAdapter()
+        SubcategoryAdapter(this)
     }
 
     override fun onCreateView(
@@ -68,5 +68,14 @@ class SubcategoryFragment : Fragment(), Injectable {
         viewModel.subcategories.observe(viewLifecycleOwner, { subcategories ->
             subcategoryAdapter.submitList(subcategories)
         })
+    }
+
+    override fun onItemClicked(subcategory: String) {
+        val category = args.id
+        val action = SubcategoryFragmentDirections.actionSubcategoryFragmentToProductListFragment(
+            category,
+            subcategory
+        )
+        findNavController().navigate(action)
     }
 }

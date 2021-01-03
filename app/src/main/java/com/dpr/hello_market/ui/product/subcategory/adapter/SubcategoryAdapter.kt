@@ -13,24 +13,30 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import timber.log.Timber
 
-class SubcategoryAdapter : ListAdapter<Category, SubcategoryAdapter.ViewHolder>(DiffCallback()) {
+class SubcategoryAdapter(private val onClickListener: OnClickListener) :
+    ListAdapter<Category, SubcategoryAdapter.ViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         ViewHolder.from(parent)
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(item)
+        holder.bind(item, onClickListener)
     }
 
-    class ViewHolder private constructor(private val binding: ItemSubcategoryBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder private constructor(private val binding: ItemSubcategoryBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         private val storageRef = Firebase.storage
 
-        fun bind(item: Category) {
+        fun bind(item: Category, onClickListener: OnClickListener) {
             binding.subcategory = item
             binding.executePendingBindings()
             Timber.d("masuk pak eko item $item")
             getCategoryIcon(item)
+
+            binding.root.setOnClickListener {
+                onClickListener.onItemClicked(item.name ?: "")
+            }
         }
 
         private fun getCategoryIcon(category: Category) {
@@ -60,7 +66,12 @@ class SubcategoryAdapter : ListAdapter<Category, SubcategoryAdapter.ViewHolder>(
     private class DiffCallback : DiffUtil.ItemCallback<Category>() {
         override fun areItemsTheSame(oldItem: Category, newItem: Category): Boolean =
             oldItem.name == newItem.name
+
         override fun areContentsTheSame(oldItem: Category, newItem: Category): Boolean =
             oldItem == newItem
+    }
+
+    interface OnClickListener {
+        fun onItemClicked(subcategory: String)
     }
 }

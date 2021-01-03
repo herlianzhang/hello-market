@@ -7,6 +7,7 @@ import com.dpr.hello_market.ui.decision.DecisionFragment
 import com.dpr.hello_market.ui.edit_profile.EditProfileFragment
 import com.dpr.hello_market.ui.home.HomeFragment
 import com.dpr.hello_market.ui.login.LoginFragment
+import com.dpr.hello_market.ui.product.list.ProductListFragment
 import com.dpr.hello_market.ui.product.subcategory.SubcategoryFragment
 import com.dpr.hello_market.ui.register.RegisterFragment
 import dagger.Module
@@ -40,4 +41,7 @@ abstract class FragmentBuildersModule {
 
     @ContributesAndroidInjector
     abstract fun contributeSubcategoryFragment(): SubcategoryFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeProductListFragment(): ProductListFragment
 }

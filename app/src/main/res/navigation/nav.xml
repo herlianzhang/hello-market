@@ -87,6 +87,9 @@
             app:exitAnim="@anim/exit_to_left"
             app:popEnterAnim="@anim/enter_from_left"
             app:popExitAnim="@anim/exit_to_right" />
+        <action
+            android:id="@+id/action_mainFragment_to_productListFragment"
+            app:destination="@id/productListFragment" />
     </fragment>
     <fragment
         android:id="@+id/editProfileFragment"
@@ -129,6 +132,25 @@
         tools:layout="@layout/fragment_subcategory">
         <argument
             android:name="id"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_subcategoryFragment_to_productListFragment"
+            app:destination="@id/productListFragment"
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/exit_to_left"
+            app:popEnterAnim="@anim/enter_from_left"
+            app:popExitAnim="@anim/exit_to_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/productListFragment"
+        android:name="com.dpr.hello_market.ui.product.list.ProductListFragment"
+        android:label="fragment_product_list"
+        tools:layout="@layout/fragment_product_list">
+        <argument
+            android:name="category"
+            app:argType="string" />
+        <argument
+            android:name="subcategory"
             app:argType="string" />
     </fragment>
 </navigation>
