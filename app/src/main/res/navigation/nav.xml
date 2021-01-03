@@ -80,6 +80,13 @@
             app:exitAnim="@anim/exit_to_left"
             app:popEnterAnim="@anim/enter_from_left"
             app:popExitAnim="@anim/exit_to_right" />
+        <action
+            android:id="@+id/action_mainFragment_to_subcategoryFragment"
+            app:destination="@id/subcategoryFragment"
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/exit_to_left"
+            app:popEnterAnim="@anim/enter_from_left"
+            app:popExitAnim="@anim/exit_to_right" />
     </fragment>
     <fragment
         android:id="@+id/editProfileFragment"
@@ -113,6 +120,15 @@
         tools:layout="@layout/fragment_change_password">
         <argument
             android:name="currentPassword"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/subcategoryFragment"
+        android:name="com.dpr.hello_market.ui.product.subcategory.SubcategoryFragment"
+        android:label="fragment_subcategory"
+        tools:layout="@layout/fragment_subcategory">
+        <argument
+            android:name="id"
             app:argType="string" />
     </fragment>
 </navigation>

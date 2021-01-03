@@ -9,6 +9,8 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.*
 import com.dpr.hello_market.R
 import com.dpr.hello_market.databinding.FragmentHomeBinding
@@ -16,10 +18,12 @@ import com.dpr.hello_market.di.Injectable
 import com.dpr.hello_market.di.injectViewModel
 import com.dpr.hello_market.ui.home.adapter.HomeBannerAdapter
 import com.dpr.hello_market.ui.home.adapter.HomeCategoryAdapter
+import com.dpr.hello_market.ui.main.MainFragmentDirections
+import com.dpr.hello_market.vo.Category
 import timber.log.Timber
 import javax.inject.Inject
 
-class HomeFragment : Fragment(), Injectable {
+class HomeFragment : Fragment(), Injectable, HomeCategoryAdapter.OnClickListener {
 
     private val delay = 5000L
 
@@ -29,6 +33,7 @@ class HomeFragment : Fragment(), Injectable {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var viewModel: HomeViewModel
 
+    private val mainNavController: NavController? by lazy { activity?.findNavController(R.id.fcv_nav) }
 
     lateinit var mainHandler: Handler
 
@@ -44,7 +49,7 @@ class HomeFragment : Fragment(), Injectable {
     }
 
     private val categoryAdapter by lazy {
-        HomeCategoryAdapter()
+        HomeCategoryAdapter(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -112,5 +117,13 @@ class HomeFragment : Fragment(), Injectable {
             position = (position + 1) % bannerAdapter.itemCount
             binding.rvBanner.smoothScrollToPosition(position)
         }
+    }
+
+    override fun onItemClicked(category: Category) {
+        val id =
+            if (category.name == "All Product") "" else category.name.toString()
+        val action =
+            MainFragmentDirections.actionMainFragmentToSubcategoryFragment(id)
+        mainNavController?.navigate(action)
     }
 }
