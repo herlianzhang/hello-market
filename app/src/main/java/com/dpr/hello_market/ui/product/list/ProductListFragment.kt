@@ -13,6 +13,7 @@ import com.dpr.hello_market.R
 import com.dpr.hello_market.databinding.FragmentProductListBinding
 import com.dpr.hello_market.di.Injectable
 import com.dpr.hello_market.di.injectViewModel
+import com.dpr.hello_market.ui.product.list.adapter.ProductAdapter
 import javax.inject.Inject
 
 class ProductListFragment : Fragment(), Injectable {
@@ -24,6 +25,10 @@ class ProductListFragment : Fragment(), Injectable {
     private lateinit var viewModel: ProductListViewModel
 
     private val args: ProductListFragmentArgs by navArgs()
+
+    private val productAdapter by lazy {
+        ProductAdapter()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,12 +44,24 @@ class ProductListFragment : Fragment(), Injectable {
         viewModel = injectViewModel(viewModelFactory)
         viewModel.getProduct(args.category, args.subcategory)
 
+        initAdapter()
         initListener()
+        initObserver()
+    }
+
+    private fun initAdapter() {
+        binding.rvProduct.adapter = productAdapter
     }
 
     private fun initListener() {
         binding.ivBack.setOnClickListener {
             findNavController().popBackStack()
         }
+    }
+
+    private fun initObserver() {
+        viewModel.product.observe(viewLifecycleOwner, { product ->
+            productAdapter.submitList(product)
+        })
     }
 }

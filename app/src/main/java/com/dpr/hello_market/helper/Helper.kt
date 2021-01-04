@@ -9,6 +9,9 @@ import android.util.Patterns
 import androidx.core.content.ContextCompat
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import timber.log.Timber
+import java.text.NumberFormat
+import java.util.*
 
 
 object Helper {
@@ -49,5 +52,34 @@ object Helper {
     fun isGpsEnabled(context: Context): Boolean {
         val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+    }
+
+    fun convertToPriceFormatWithoutCurrency(price: String?): String {
+        return try {
+            val locale = Locale("in")
+            val nf = NumberFormat.getNumberInstance(locale)
+            nf.format(price!!.toLong())
+        } catch (e: NumberFormatException) {
+            Timber.e("Failed Convert currency ${e.printStackTrace()}")
+            convertCurrencyManually(price!!)
+        }
+    }
+
+    private fun convertCurrencyManually(number: String): String {
+        val maxIndex = number.length - 1
+        var convertedPrice = ""
+        var index = 0
+        for (i in maxIndex downTo 0) {
+            index++
+
+            if (index == 4) {
+                index = 0
+                convertedPrice = ".$convertedPrice"
+            }
+
+            convertedPrice = "${number[i]}$convertedPrice"
+
+        }
+        return convertedPrice
     }
 }
