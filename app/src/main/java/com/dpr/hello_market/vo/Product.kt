@@ -11,14 +11,16 @@ data class Product(
     var name: String? = "",
     var picture: String? = "",
     var price: Long? = 0L,
-    var quantity: Long? = 0L
+    var quantity: Long? = 0L,
+    val unit: String? = "",
 ) : Parcelable {
     @Exclude
     fun toMap(): Map<String, Any?> {
         return mapOf(
             "Picture" to picture,
             "Price" to price,
-            "Quantity" to quantity
+            "Quantity" to quantity,
+            "Unit" to unit
         )
     }
 }

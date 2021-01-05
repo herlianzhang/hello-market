@@ -33,7 +33,7 @@ class ProductAdapter : ListAdapter<Product, ProductAdapter.ViewHolder>(DiffCallb
             binding.executePendingBindings()
 
             binding.tvPrice.text =
-                "Rp ${Helper.convertToPriceFormatWithoutCurrency(item.price.toString())} / kg"
+                "Rp ${Helper.convertToPriceFormatWithoutCurrency(item.price.toString())} / ${item.unit}"
 
             getProductImage(item)
         }

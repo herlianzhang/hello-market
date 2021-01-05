@@ -33,7 +33,8 @@ class ProductListViewModel @Inject constructor(app: Application) : AndroidViewMo
                                 valueRes.key,
                                 data["Picture"] as String,
                                 data["Price"] as Long,
-                                data["Quantity"] as Long
+                                data["Quantity"] as Long,
+                                data["Unit"] as String
                             )
                             products.add(product)
                         }
