@@ -41,8 +41,8 @@ class HomeFragment : Fragment(), Injectable, HomeCategoryAdapter.OnClickListener
 
     private val updateTextTask = object : Runnable {
         override fun run() {
-            moveBanner()
             mainHandler.postDelayed(this, delay)
+            moveBanner()
         }
     }
 
@@ -84,7 +84,7 @@ class HomeFragment : Fragment(), Injectable, HomeCategoryAdapter.OnClickListener
 
     override fun onResume() {
         super.onResume()
-        if (viewModel.banner.value != null)
+        if (viewModel.banner.value != null && !mainHandler.hasCallbacks(updateTextTask))
             mainHandler.postDelayed(updateTextTask, delay)
     }
 
