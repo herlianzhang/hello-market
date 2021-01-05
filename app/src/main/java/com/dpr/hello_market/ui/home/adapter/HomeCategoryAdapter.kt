@@ -32,7 +32,8 @@ class HomeCategoryAdapter(private val onClickListener: OnClickListener) :
             binding.category = item
             binding.executePendingBindings()
 
-            getCategoryIcon(item)
+            if (item.picture != null)
+                getCategoryIcon(item)
 
             binding.root.setOnClickListener {
                 onClickListener.onItemClicked(item)

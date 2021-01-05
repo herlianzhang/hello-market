@@ -35,7 +35,8 @@ class ProductAdapter : ListAdapter<Product, ProductAdapter.ViewHolder>(DiffCallb
             binding.tvPrice.text =
                 "Rp ${Helper.convertToPriceFormatWithoutCurrency(item.price.toString())} / ${item.unit}"
 
-            getProductImage(item)
+            if (item.picture != null)
+                getProductImage(item)
         }
 
         private fun getProductImage(product: Product) {

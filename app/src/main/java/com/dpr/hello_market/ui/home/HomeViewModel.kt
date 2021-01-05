@@ -84,7 +84,7 @@ class HomeViewModel @Inject constructor(app: Application) : AndroidViewModel(app
                         categories.add(
                             Category(
                                 valueRes.key,
-                                (valueRes.value as Map<String, Any>)["Picture"] as String
+                                (valueRes.value as Map<String, Any?>)["Picture"] as String?
                             )
                         )
                     }

@@ -32,7 +32,9 @@ class SubcategoryAdapter(private val onClickListener: OnClickListener) :
             binding.subcategory = item
             binding.executePendingBindings()
             Timber.d("masuk pak eko item $item")
-            getCategoryIcon(item)
+
+            if (item.picture != null)
+                getCategoryIcon(item)
 
             binding.root.setOnClickListener {
                 onClickListener.onItemClicked(item.name ?: "")

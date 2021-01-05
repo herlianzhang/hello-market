@@ -36,7 +36,7 @@ class SubcategoryViewModel @Inject constructor(app: Application) : AndroidViewMo
                             subcategory.add(
                                 Category(
                                     valueRes.key,
-                                    (valueRes.value as Map<String, Any>)["Picture"] as String
+                                    (valueRes.value as Map<String, Any?>)["Picture"] as String?
                                 )
                             )
                         }

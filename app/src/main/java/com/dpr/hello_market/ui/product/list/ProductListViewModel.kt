@@ -31,10 +31,10 @@ class ProductListViewModel @Inject constructor(app: Application) : AndroidViewMo
                             val data = valueRes.value as Map<String, Any?>
                             val product = Product(
                                 valueRes.key,
-                                data["Picture"] as String,
-                                data["Price"] as Long,
-                                data["Quantity"] as Long,
-                                data["Unit"] as String
+                                data["Picture"] as String?,
+                                data["Price"] as Long?,
+                                data["Quantity"] as Long?,
+                                data["Unit"] as String?
                             )
                             products.add(product)
                         }

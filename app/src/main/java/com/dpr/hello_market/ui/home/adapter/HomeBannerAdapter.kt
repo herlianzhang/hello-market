@@ -28,6 +28,7 @@ class HomeBannerAdapter : ListAdapter<String, HomeBannerAdapter.ViewHolder>(Diff
 
         fun bind(item: String) {
             binding.executePendingBindings()
+
             getBannerImage(item)
         }
 
