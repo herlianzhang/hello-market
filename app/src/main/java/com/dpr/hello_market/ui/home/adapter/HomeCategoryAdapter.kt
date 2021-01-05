@@ -5,13 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.dpr.hello_market.BuildConfig
 import com.dpr.hello_market.databinding.ItemCategoryBinding
+import com.dpr.hello_market.helper.Helper
 import com.dpr.hello_market.vo.Category
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
-import timber.log.Timber
 
 class HomeCategoryAdapter(private val onClickListener: OnClickListener) :
     ListAdapter<Category, HomeCategoryAdapter.ViewHolder>(DiffCallback()) {
@@ -26,32 +22,15 @@ class HomeCategoryAdapter(private val onClickListener: OnClickListener) :
 
     class ViewHolder private constructor(private val binding: ItemCategoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        private val storageRef = Firebase.storage
 
         fun bind(item: Category, onClickListener: OnClickListener) {
             binding.category = item
             binding.executePendingBindings()
 
-            if (item.picture != null)
-                getCategoryIcon(item)
+            Helper.setImage(item, binding.ivCategory)
 
             binding.root.setOnClickListener {
                 onClickListener.onItemClicked(item)
-            }
-        }
-
-        private fun getCategoryIcon(category: Category) {
-            val mRef =
-                storageRef.getReferenceFromUrl(BuildConfig.STORAGE_URL)
-                    .child(category.picture ?: "")
-            mRef.downloadUrl.addOnCompleteListener {
-                if (it.isSuccessful) {
-                    try {
-                        Glide.with(binding.root.context).load(it.result).into(binding.ivCategory)
-                    } catch (e: Exception) {
-                        Timber.e("Error fetch category image name $category}")
-                    }
-                }
             }
         }
 

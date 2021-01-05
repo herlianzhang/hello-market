@@ -12,7 +12,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
-import androidx.recyclerview.widget.*
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.PagerSnapHelper
 import com.dpr.hello_market.R
 import com.dpr.hello_market.databinding.FragmentHomeBinding
 import com.dpr.hello_market.di.Injectable
@@ -104,7 +105,7 @@ class HomeFragment : Fragment(), Injectable, HomeCategoryAdapter.OnClickListener
         })
 
         viewModel.banner.observe(viewLifecycleOwner, { banners ->
-            bannerAdapter.submitList(banners.toMutableList())
+            bannerAdapter.submitList(banners)
             binding.indicator.createIndicators(banners.size, 0)
             if (!mainHandler.hasCallbacks(updateTextTask))
                 mainHandler.postDelayed(updateTextTask, delay)

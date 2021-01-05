@@ -6,13 +6,13 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.dpr.hello_market.BuildConfig
+import com.dpr.hello_market.R
 import com.dpr.hello_market.databinding.ItemProductBinding
 import com.dpr.hello_market.helper.Helper
 import com.dpr.hello_market.vo.Product
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
-import timber.log.Timber
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class ProductAdapter : ListAdapter<Product, ProductAdapter.ViewHolder>(DiffCallback()) {
 
@@ -26,7 +26,6 @@ class ProductAdapter : ListAdapter<Product, ProductAdapter.ViewHolder>(DiffCallb
 
     class ViewHolder private constructor(private val binding: ItemProductBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        private val storageRef = Firebase.storage
 
         fun bind(item: Product) {
             binding.product = item
@@ -35,23 +34,7 @@ class ProductAdapter : ListAdapter<Product, ProductAdapter.ViewHolder>(DiffCallb
             binding.tvPrice.text =
                 "Rp ${Helper.convertToPriceFormatWithoutCurrency(item.price.toString())} / ${item.unit}"
 
-            if (item.picture != null)
-                getProductImage(item)
-        }
-
-        private fun getProductImage(product: Product) {
-            val mRef =
-                storageRef.getReferenceFromUrl(BuildConfig.STORAGE_URL)
-                    .child(product.picture ?: "")
-            mRef.downloadUrl.addOnCompleteListener {
-                if (it.isSuccessful) {
-                    try {
-                        Glide.with(binding.root.context).load(it.result).into(binding.ivProduct)
-                    } catch (e: Exception) {
-                        Timber.e("Error fetch category image name $product}")
-                    }
-                }
-            }
+            Helper.setImage(item, binding.ivProduct)
         }
 
         companion object {
@@ -70,5 +53,4 @@ class ProductAdapter : ListAdapter<Product, ProductAdapter.ViewHolder>(DiffCallb
         override fun areContentsTheSame(oldItem: Product, newItem: Product): Boolean =
             oldItem == newItem
     }
-
 }

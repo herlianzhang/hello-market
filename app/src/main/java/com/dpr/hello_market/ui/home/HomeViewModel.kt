@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.dpr.hello_market.BuildConfig
+import com.dpr.hello_market.vo.Banner
 import com.dpr.hello_market.vo.Category
 import com.dpr.hello_market.vo.Customer
 import com.google.firebase.auth.FirebaseAuth
@@ -50,8 +51,8 @@ class HomeViewModel @Inject constructor(app: Application) : AndroidViewModel(app
     val categories: LiveData<List<Category>>
         get() = _categories
 
-    private val _banner = MutableLiveData<List<String>>()
-    val banner: LiveData<List<String>>
+    private val _banner = MutableLiveData<List<Banner>>()
+    val banner: LiveData<List<Banner>>
         get() = _banner
 
     init {
@@ -103,9 +104,9 @@ class HomeViewModel @Inject constructor(app: Application) : AndroidViewModel(app
         database.child("Banner").addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 try {
-                    val banners = mutableListOf<String>()
+                    val banners = mutableListOf<Banner>()
                     for (valueRes in snapshot.children) {
-                        banners.add(valueRes.value as String)
+                        banners.add(Banner(valueRes.value as String?))
                     }
                     Timber.d("bannernya $banners")
                     _banner.postValue(banners)

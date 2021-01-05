@@ -8,9 +8,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.dpr.hello_market.BuildConfig
 import com.dpr.hello_market.databinding.ItemSubcategoryBinding
+import com.dpr.hello_market.helper.Helper
 import com.dpr.hello_market.vo.Category
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 class SubcategoryAdapter(private val onClickListener: OnClickListener) :
@@ -26,33 +32,16 @@ class SubcategoryAdapter(private val onClickListener: OnClickListener) :
 
     class ViewHolder private constructor(private val binding: ItemSubcategoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        private val storageRef = Firebase.storage
 
         fun bind(item: Category, onClickListener: OnClickListener) {
             binding.subcategory = item
             binding.executePendingBindings()
             Timber.d("masuk pak eko item $item")
 
-            if (item.picture != null)
-                getCategoryIcon(item)
+            Helper.setImage(item, binding.ivSubcategory)
 
             binding.root.setOnClickListener {
                 onClickListener.onItemClicked(item.name ?: "")
-            }
-        }
-
-        private fun getCategoryIcon(category: Category) {
-            val mRef =
-                storageRef.getReferenceFromUrl(BuildConfig.STORAGE_URL)
-                    .child(category.picture ?: "")
-            mRef.downloadUrl.addOnCompleteListener {
-                if (it.isSuccessful) {
-                    try {
-                        Glide.with(binding.root.context).load(it.result).into(binding.ivSubcategory)
-                    } catch (e: Exception) {
-                        Timber.e("Error fetch category image name $category}")
-                    }
-                }
             }
         }
 

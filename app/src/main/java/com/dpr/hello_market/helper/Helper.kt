@@ -4,11 +4,24 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.location.LocationManager
+import android.net.Uri
 import android.text.TextUtils
 import android.util.Patterns
+import android.widget.ImageView
 import androidx.core.content.ContextCompat
+import com.bumptech.glide.Glide
+import com.dpr.hello_market.BuildConfig
+import com.dpr.hello_market.R
+import com.dpr.hello_market.vo.Picture
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.text.NumberFormat
 import java.util.*
@@ -81,5 +94,33 @@ object Helper {
 
         }
         return convertedPrice
+    }
+
+    private suspend fun downloadImage(picture: String): Uri? {
+        val storageRef = Firebase.storage
+        return try {
+            withContext(Dispatchers.IO) {
+                storageRef.getReferenceFromUrl(BuildConfig.STORAGE_URL)
+                    .child(picture).downloadUrl.await()
+            }
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    fun setImage(item: Picture, imageView: ImageView) {
+        if (item.imageUri == null) {
+            Glide.with(imageView.context).load(R.color.color_grey).into(imageView)
+            if (item.isFirst) {
+                item.isFirst = false
+                CoroutineScope(Dispatchers.Main).launch {
+                    val imageUri = downloadImage(item.picture ?: "")
+                    item.imageUri = imageUri
+                    Glide.with(imageView.context).load(imageUri).into(imageView)
+                }
+            }
+        } else {
+            Glide.with(imageView.context).load(item.imageUri).into(imageView)
+        }
     }
 }
