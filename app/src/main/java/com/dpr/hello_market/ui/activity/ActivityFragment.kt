@@ -11,7 +11,7 @@ import com.dpr.hello_market.R
 import com.dpr.hello_market.databinding.FragmentActivityBinding
 import com.dpr.hello_market.di.Injectable
 import com.dpr.hello_market.di.injectViewModel
-import timber.log.Timber
+import com.dpr.hello_market.ui.activity.adapter.ActivityAdapter
 import javax.inject.Inject
 
 class ActivityFragment : Fragment(), Injectable {
@@ -21,6 +21,10 @@ class ActivityFragment : Fragment(), Injectable {
 
     private lateinit var binding: FragmentActivityBinding
     private lateinit var viewModel: ActivityViewModel
+
+    private val activityAdapter by lazy {
+        ActivityAdapter()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,12 +39,17 @@ class ActivityFragment : Fragment(), Injectable {
         super.onViewCreated(view, savedInstanceState)
         viewModel = injectViewModel(viewModelFactory)
 
+        initAdapter()
         initObserver()
+    }
+
+    private fun initAdapter() {
+        binding.rvMain.adapter = activityAdapter
     }
 
     private fun initObserver() {
         viewModel.activity.observe(viewLifecycleOwner, {
-            Timber.d("Masuk pak eko $it")
+            activityAdapter.submitList(it)
         })
     }
 }

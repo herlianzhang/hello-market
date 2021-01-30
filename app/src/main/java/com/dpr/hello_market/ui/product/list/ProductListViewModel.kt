@@ -67,11 +67,10 @@ class ProductListViewModel @Inject constructor(
     fun addItemToCart(product: Product, total: Int) {
         viewModelScope.launch {
             val cart = CartDbModel(
-                System.currentTimeMillis().toString(),
-                product.name.toString(),
-                product.price ?: 0,
-                total,
-                product.unit.toString()
+                name = product.name.toString(),
+                price = product.price ?: 0,
+                total = total,
+                unit = product.unit.toString()
             )
             cartRepository.addCart(cart)
         }

@@ -31,6 +31,7 @@
                     app:tint="@color/white" />
 
                 <TextView
+                    android:id="@+id/tv_id"
                     style="@style/HeaderText"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -49,13 +50,15 @@
                 android:id="@+id/ll_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                tools:visibility="gone">
+                android:orientation="vertical">
 
                 <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_main"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:orientation="vertical"
                     android:paddingHorizontal="12dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     tools:listitem="@layout/item_activity_product" />
 
                 <View
@@ -77,6 +80,7 @@
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/tv_total_price"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="12dp"

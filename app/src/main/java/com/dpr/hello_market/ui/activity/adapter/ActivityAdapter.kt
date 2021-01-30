@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.dpr.hello_market.databinding.ItemActivityBinding
 import com.dpr.hello_market.db.activity.ActivityDbModel
+import com.dpr.hello_market.helper.Helper
 
 class ActivityAdapter : ListAdapter<ActivityDbModel, ActivityAdapter.ViewHolder>(DiffCallback()) {
 
@@ -18,9 +19,22 @@ class ActivityAdapter : ListAdapter<ActivityDbModel, ActivityAdapter.ViewHolder>
         holder.bind(item)
     }
 
-    class ViewHolder private constructor(private val binding: ItemActivityBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder private constructor(private val binding: ItemActivityBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ActivityDbModel) {
+            binding.executePendingBindings()
 
+            binding.tvId.text = "Order ${item.id}"
+            val mAdapter = ActivityProductAdapter()
+            binding.rvMain.adapter = mAdapter
+            mAdapter.submitList(item.order)
+
+            var totalPrice = 0
+            for (product in item.order) {
+                totalPrice += product.total.times(product.price).toInt()
+            }
+            binding.tvTotalPrice.text =
+                "Rp ${Helper.convertToPriceFormatWithoutCurrency(totalPrice.toString())}"
         }
 
         companion object {
