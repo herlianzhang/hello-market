@@ -27,6 +27,7 @@ class ActivityAdapter : ListAdapter<ActivityDbModel, ActivityAdapter.ViewHolder>
 
             binding.llContent.isVisible = false
             binding.tvId.text = "Order ${item.id}"
+            binding.ivExpanded.rotation = 0f
             val mAdapter = ActivityProductAdapter()
             binding.rvMain.adapter = mAdapter
             mAdapter.submitList(item.order)
