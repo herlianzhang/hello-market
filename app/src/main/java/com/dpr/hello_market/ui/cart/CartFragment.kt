@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -34,6 +35,7 @@ class CartFragment : Fragment(), Injectable, CartAdapter.OnClickListener {
         savedInstanceState: Bundle?
     ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_cart, container, false)
+        binding.lifecycleOwner = this
         return binding.root
     }
 
@@ -42,11 +44,22 @@ class CartFragment : Fragment(), Injectable, CartAdapter.OnClickListener {
         viewModel = injectViewModel(viewModelFactory)
 
         initAdapter()
+        initListener()
         initObserver()
     }
 
     private fun initAdapter() {
         binding.rvMain.adapter = cartAdapter
+    }
+
+    private fun initListener() {
+        binding.btnPlaceOrder.setOnClickListener {
+            viewModel.cart.value?.let {
+                viewModel.addActivity(it)
+            }
+
+            Toast.makeText(requireContext(), "Order Success", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun initObserver() {
