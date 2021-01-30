@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -50,6 +51,8 @@ class ActivityFragment : Fragment(), Injectable {
     private fun initObserver() {
         viewModel.activity.observe(viewLifecycleOwner, {
             activityAdapter.submitList(it)
+
+            binding.noData.isVisible = it.isEmpty()
         })
     }
 }

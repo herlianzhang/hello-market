@@ -1,10 +1,12 @@
 package com.dpr.hello_market.ui.cart.adapter
 
+import android.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.dpr.hello_market.R
 import com.dpr.hello_market.databinding.ItemCartBinding
 import com.dpr.hello_market.db.cart.CartDbModel
 import com.dpr.hello_market.helper.Helper
@@ -34,7 +36,15 @@ class CartAdapter(private val onClickListener: OnClickListener) :
 
             binding.ivMin.setOnClickListener {
                 if (item.total <= 1) {
+                    AlertDialog.Builder(binding.root.context)
+                        .setMessage("Are you sure want to Remove this item?")
+                        .setPositiveButton("yes") { _, _ ->
+                            onClickListener.onRemoveCart(item)
+                        }
+                        .setNegativeButton("No") { _, _ ->
 
+                        }
+                        .show()
                 } else {
                     onClickListener.onReplaceCart(item.copy(total = item.total - 1))
                 }

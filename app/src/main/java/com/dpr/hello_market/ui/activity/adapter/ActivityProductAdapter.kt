@@ -7,8 +7,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.dpr.hello_market.databinding.ItemActivityProductBinding
 import com.dpr.hello_market.db.cart.CartDbModel
+import java.text.DecimalFormat
 
-class ActivityProductAdapter : ListAdapter<CartDbModel, ActivityProductAdapter.ViewHolder>(DiffCallback()) {
+class ActivityProductAdapter :
+    ListAdapter<CartDbModel, ActivityProductAdapter.ViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         ViewHolder.from(parent)
@@ -25,7 +27,8 @@ class ActivityProductAdapter : ListAdapter<CartDbModel, ActivityProductAdapter.V
             binding.executePendingBindings()
 
             binding.tvWeight.text = "${item.total}${item.unit}"
-            binding.tvTotalPrice.text = String.format("#.###,#", (item.total * item.price) / 1000)
+            binding.tvTotalPrice.text =
+                DecimalFormat("#.##").format((item.total * item.price) / 1000) + "k"
         }
 
         companion object {

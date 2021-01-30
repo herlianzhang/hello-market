@@ -58,6 +58,8 @@ class CartFragment : Fragment(), Injectable, CartAdapter.OnClickListener {
                 viewModel.addActivity(it)
             }
 
+            viewModel.removeAll()
+
             Toast.makeText(requireContext(), "Order Success", Toast.LENGTH_SHORT).show()
         }
     }

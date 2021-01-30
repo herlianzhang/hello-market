@@ -2,6 +2,7 @@ package com.dpr.hello_market.ui.activity.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -24,6 +25,7 @@ class ActivityAdapter : ListAdapter<ActivityDbModel, ActivityAdapter.ViewHolder>
         fun bind(item: ActivityDbModel) {
             binding.executePendingBindings()
 
+            binding.llContent.isVisible = false
             binding.tvId.text = "Order ${item.id}"
             val mAdapter = ActivityProductAdapter()
             binding.rvMain.adapter = mAdapter
@@ -35,6 +37,12 @@ class ActivityAdapter : ListAdapter<ActivityDbModel, ActivityAdapter.ViewHolder>
             }
             binding.tvTotalPrice.text =
                 "Rp ${Helper.convertToPriceFormatWithoutCurrency(totalPrice.toString())}"
+
+            binding.root.setOnClickListener {
+                binding.ivExpanded.animate().setDuration(500)
+                    .rotation(if (binding.llContent.isVisible) 0f else 180f).start()
+                binding.llContent.isVisible = !binding.llContent.isVisible
+            }
         }
 
         companion object {
