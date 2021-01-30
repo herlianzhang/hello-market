@@ -3,6 +3,8 @@ package com.dpr.hello_market.di
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.dpr.hello_market.ui.account.AccountViewModel
+import com.dpr.hello_market.ui.activity.ActivityViewModel
+import com.dpr.hello_market.ui.cart.CartViewModel
 import com.dpr.hello_market.ui.change_password.ChangePasswordViewModel
 import com.dpr.hello_market.ui.choose_location.ChooseLocationViewModel
 import com.dpr.hello_market.ui.decision.DecisionViewModel
@@ -68,6 +70,16 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ProductListViewModel::class)
     abstract fun bindProductListViewModel(productListViewModel: ProductListViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(CartViewModel::class)
+    abstract fun bindCartViewModel(cartViewModel: CartViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ActivityViewModel::class)
+    abstract fun bindActivityViewModel(activityViewModel: ActivityViewModel): ViewModel
 
     @Binds
     abstract fun bindViewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory

@@ -4,6 +4,8 @@ import android.app.Application
 import androidx.room.Room
 import com.dpr.hello_market.api.ApiService
 import com.dpr.hello_market.api.AuthInterceptor
+import com.dpr.hello_market.db.activity.ActivityDao
+import com.dpr.hello_market.db.activity.ActivityDatabase
 import com.dpr.hello_market.db.cart.CartDao
 import com.dpr.hello_market.db.cart.CartDatabase
 import dagger.Module
@@ -50,6 +52,19 @@ class AppModule {
     @Provides
     fun provideCartDao(db: CartDatabase): CartDao {
         return db.cartDao()
+    }
+
+    @Singleton
+    @Provides
+    fun provideActivityDb(app: Application): ActivityDatabase {
+        return Room.databaseBuilder(app, ActivityDatabase::class.java, "activity.db")
+            .fallbackToDestructiveMigration().build()
+    }
+
+    @Singleton
+    @Provides
+    fun provideActivityDao(db: ActivityDatabase): ActivityDao {
+        return db.activityDao()
     }
 
     private fun <T> provideService(

@@ -1,6 +1,8 @@
 package com.dpr.hello_market.di
 
 import com.dpr.hello_market.ui.account.AccountFragment
+import com.dpr.hello_market.ui.activity.ActivityFragment
+import com.dpr.hello_market.ui.cart.CartFragment
 import com.dpr.hello_market.ui.change_password.ChangePasswordFragment
 import com.dpr.hello_market.ui.choose_location.ChooseLocationFragment
 import com.dpr.hello_market.ui.decision.DecisionFragment
@@ -41,6 +43,12 @@ abstract class FragmentBuildersModule {
 
     @ContributesAndroidInjector
     abstract fun contributeSubcategoryFragment(): SubcategoryFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeCartFragment(): CartFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeActivityFragment(): ActivityFragment
 
     @ContributesAndroidInjector
     abstract fun contributeProductListFragment(): ProductListFragment
