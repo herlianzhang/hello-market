@@ -1,8 +1,6 @@
 package com.dpr.hello_market.vo
 
-import android.net.Uri
 import android.os.Parcelable
-import com.google.firebase.database.Exclude
 import com.google.firebase.database.IgnoreExtraProperties
 import kotlinx.parcelize.Parcelize
 

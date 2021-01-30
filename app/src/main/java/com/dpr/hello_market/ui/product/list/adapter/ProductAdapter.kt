@@ -5,29 +5,24 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.dpr.hello_market.R
 import com.dpr.hello_market.databinding.ItemProductBinding
 import com.dpr.hello_market.helper.Helper
 import com.dpr.hello_market.vo.Product
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
-class ProductAdapter : ListAdapter<Product, ProductAdapter.ViewHolder>(DiffCallback()) {
+class ProductAdapter(private val onClickListener: OnClickListener) : ListAdapter<Product, ProductAdapter.ViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         ViewHolder.from(parent)
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(item)
+        holder.bind(item, onClickListener)
     }
 
     class ViewHolder private constructor(private val binding: ItemProductBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: Product) {
+        fun bind(item: Product, onClickListener: OnClickListener) {
             binding.product = item
             binding.executePendingBindings()
 
@@ -35,6 +30,10 @@ class ProductAdapter : ListAdapter<Product, ProductAdapter.ViewHolder>(DiffCallb
                 "Rp ${Helper.convertToPriceFormatWithoutCurrency(item.price.toString())} / ${item.unit}"
 
             Helper.setImage(item, binding.ivProduct)
+
+            binding.tvOrder.setOnClickListener {
+                onClickListener.onItemClicked(item)
+            }
         }
 
         companion object {
@@ -52,5 +51,9 @@ class ProductAdapter : ListAdapter<Product, ProductAdapter.ViewHolder>(DiffCallb
 
         override fun areContentsTheSame(oldItem: Product, newItem: Product): Boolean =
             oldItem == newItem
+    }
+
+    interface OnClickListener {
+        fun onItemClicked(product: Product)
     }
 }

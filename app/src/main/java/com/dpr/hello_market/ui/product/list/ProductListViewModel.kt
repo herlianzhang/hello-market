@@ -5,6 +5,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.dpr.hello_market.db.cart.CartDbModel
+import com.dpr.hello_market.repository.CartRepository
 import com.dpr.hello_market.vo.Product
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -12,11 +14,15 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
-class ProductListViewModel @Inject constructor(app: Application) : AndroidViewModel(app) {
+class ProductListViewModel @Inject constructor(
+    app: Application,
+    private val cartRepository: CartRepository
+) : AndroidViewModel(app) {
     private val database = Firebase.database.reference
 
     private val _product = MutableLiveData<List<Product>>()
@@ -56,5 +62,18 @@ class ProductListViewModel @Inject constructor(app: Application) : AndroidViewMo
                     Timber.e("get product fail cause $error")
                 }
             })
+    }
+
+    fun addItemToCart(product: Product, total: Int) {
+        viewModelScope.launch {
+            val cart = CartDbModel(
+                System.currentTimeMillis().toString(),
+                product.name.toString(),
+                product.price ?: 0,
+                total,
+                product.unit.toString()
+            )
+            cartRepository.addCart(cart)
+        }
     }
 }

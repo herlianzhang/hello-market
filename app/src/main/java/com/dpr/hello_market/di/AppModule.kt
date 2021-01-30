@@ -1,7 +1,11 @@
 package com.dpr.hello_market.di
 
+import android.app.Application
+import androidx.room.Room
 import com.dpr.hello_market.api.ApiService
 import com.dpr.hello_market.api.AuthInterceptor
+import com.dpr.hello_market.db.cart.CartDao
+import com.dpr.hello_market.db.cart.CartDatabase
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -33,6 +37,19 @@ class AppModule {
             .client(okHttpClient)
             .addConverterFactory(converterFactory)
             .build()
+    }
+
+    @Singleton
+    @Provides
+    fun provideCartDb(app: Application): CartDatabase {
+        return Room.databaseBuilder(app, CartDatabase::class.java, "cart.db")
+            .fallbackToDestructiveMigration().build()
+    }
+
+    @Singleton
+    @Provides
+    fun provideCartDao(db: CartDatabase): CartDao {
+        return db.cartDao()
     }
 
     private fun <T> provideService(
