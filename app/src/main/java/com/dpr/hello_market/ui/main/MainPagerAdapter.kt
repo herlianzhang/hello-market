@@ -10,7 +10,7 @@ import com.dpr.hello_market.ui.home.HomeFragment
 
 class MainPagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
 
-    private val myFragments = listOf(
+    private val myFragments = listOf<Fragment>(
         HomeFragment(),
         ActivityFragment(),
         CartFragment(),
